@@ -117,7 +117,7 @@
     "_id": 20,
     "fullName": "Rahul Shah",
     "college": "K S School Of Business Management",
-    "technologyAssigned": "UI/UX Designer"
+    "technologyAssigned": "UI/UX"
   },
   {
     "_id": 21,
@@ -147,7 +147,7 @@
     "_id": 25,
     "fullName": "Sumit Kadiya",
     "college": "Government Engineering college",
-    "technologyAssigned": "React JS"
+    "technologyAssigned": "ReactJS"
   },
   {
     "_id": 26,
