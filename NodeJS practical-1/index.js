@@ -3,6 +3,7 @@ const argv = yargs.argv;
 const addUSer = require('./addUser');
 const updateUser = require('./updateUser');
 const deleteUser = require('./deleteUser');
+const fetchOne = require('./fetchOne');
 
 const operation = argv.operation;
 const fullname = argv.fullname;
@@ -19,4 +20,6 @@ if(operation === "add"){
     updateUser("./users.txt", argv);
 }else if(operation === "delete"){
     deleteUser("./users.txt", argv);
+}else if(operation === "fetchOne"){
+    fetchOne("./users.txt", argv);
 }
