@@ -1,6 +1,7 @@
 const yargs = require('yargs');
 const argv = yargs.argv;
 const addUSer = require('./addUser');
+const updateUser = require('./updateUser');
 
 const operation = argv.operation;
 const fullname = argv.fullname;
@@ -13,4 +14,6 @@ if(!["add", "update", "delete", "fetchOne", "fetchOne", "fetchAll"].includes(ope
 }
 if(operation === "add"){   
     addUSer("./users.txt", argv);
+}else if(operation === "update"){
+    updateUser("./users.txt", argv);
 }
