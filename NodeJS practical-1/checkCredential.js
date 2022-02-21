@@ -20,7 +20,7 @@ module.exports = function(userData){
             return false;
         }
     }else{
-        console.log("Please provide atleast id or emailID to update data!!!");
+        console.log("Please provide atleast id or emailID!!!");
         return false;
     }
 }
