@@ -1,0 +1,1 @@
+first().then( mess1 => second(mess1)).then( mess2 => console.log(mess2));
