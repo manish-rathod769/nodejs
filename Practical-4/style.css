@@ -1,0 +1,12 @@
+input:focus, select:focus{
+    box-shadow:none !important;
+    border-color: #6CC953 !important;
+}
+
+.bg-dark-grey{
+    background-color: #7e7b7b !important;
+}
+
+.bold-text{
+    font-weight: 600;
+}
