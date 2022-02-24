@@ -17,6 +17,11 @@ let validateAddressField = (id, errId) => {
     checkCondition(fieldText.length > 0, errId);
 }
 
+let validatePinCode = (id, errID) => {
+    let fieldText = $(id).val();
+    checkCondition(fieldText.length == 6, errID)
+}
+
 let validateTechnologyKnownField = (errId) => {
     let fieldText = [];
     document.querySelectorAll('input[type="checkbox"]:checked').forEach( (tech) => {
@@ -77,11 +82,77 @@ let validateForm = () => {
         userData.forEach( (obj) => {
             userDataObj[obj.name] = obj.value;
         })
-        console.log(userDataObj);
+        // console.log(userDataObj);
+        userDataObj.id = checkForID();
+        userDataObj.tech = techKnown;
         delete userDataObj.techKnown;
+        // localStorage.setItem("usersDataInStr", "[" + JSON.stringify(userDataObj) + "]");
+        // console.log( "[" + JSON.stringify(userDataObj) + "]");
+        let usersInLocalStorage = localStorage.getItem("usersDataInStr");
+        usersInLocalStorage = usersInLocalStorage.substring(0, usersInLocalStorage.length-1);
+        let newUserDataInStr = usersInLocalStorage + "," + JSON.stringify(userDataObj) + "]";
+        localStorage.setItem("usersDataInStr", newUserDataInStr);
+        alert("Data inserted successfully...");
+        window.location.reload();
     }else{
         alert("Please Enter Valid Inputs  !!!");
     }
 }
 
-// Fetch data and save data
+let checkForID = ()=> {
+    let users = JSON.parse(localStorage.getItem("usersDataInStr"));
+    let ids = [];
+    users.forEach( (obj) => {
+        ids.push(obj.id);
+    });
+    for(let i=1; ; i++){
+        if(!ids.includes(i)){
+            return i;
+        }
+    }
+}
+
+let LoadData = () => {
+    const mytable = document.getElementById("employee-data");
+    // let users = localStorage.getItem("usersDataInStr");
+    // console.log(JSON.parse(users))
+    let users = JSON.parse(localStorage.getItem("usersDataInStr"));
+    // console.log(JSON.stringify(users));
+    users.forEach( (obj) => {
+        let newRow = document.createElement("tr");
+        let cell1 = document.createElement("td"); cell1.innerText = obj.id; newRow.appendChild(cell1);
+        let cell2 = document.createElement("td"); cell2.innerText = `${obj.title} ${obj.fname} ${obj.mname} ${obj.lname}`; newRow.appendChild(cell2);
+        let cell3 = document.createElement("td"); cell3.innerText = `${obj.gender}`; newRow.appendChild(cell3);
+        let cell4 = document.createElement("td"); cell4.innerText = obj.emailID; newRow.appendChild(cell4);
+        let cell5 = document.createElement("td"); cell5.innerText = obj.contactNum; newRow.appendChild(cell5);
+        let cell6 = document.createElement("td"); cell6.innerText = `${obj.houseNum}, ${obj.addressLine}, ${obj.landmark}, ${obj.city}, ${obj.state}, ${obj.country} - ${obj.pincode}`; newRow.appendChild(cell6);
+        let cell7 = document.createElement("td"); cell7.innerText = obj.designation; newRow.appendChild(cell7);
+        let cell8 = document.createElement("td"); cell8.innerText = obj.tech; newRow.appendChild(cell8);
+        let cell9 = document.createElement("td"); cell9.innerText = obj.experience; newRow.appendChild(cell9);
+        
+        let btnCell = document.createElement("td");
+        let btn = document.createElement("button");
+        btn.innerText = "delete";
+        btn.value = obj.id;
+        btn.classList.add("btn", "btn-danger", "btn-sm");
+        btn.setAttribute("onclick",`deleteUser('#del${obj.id}')`);
+        btnCell.appendChild(btn);
+        newRow.appendChild(btnCell);
+        mytable.appendChild(newRow);
+    });
+}
+LoadData();
+
+let deleteUser = id => {
+    let uid = id.substring(4);
+    let userdInObj = JSON.parse(localStorage.getItem("usersDataInStr"));
+    let usersAfterDelete = [];
+    userdInObj.forEach( obj => {
+        if(obj.id != uid){
+            usersAfterDelete.push(obj);
+        }
+    });
+    localStorage.setItem("usersDataInStr", JSON.stringify(usersAfterDelete));
+    alert("Data deleted successfully !!!");
+    window.location.reload();
+}

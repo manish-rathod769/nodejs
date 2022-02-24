@@ -17,7 +17,6 @@
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
     <script src="https://code.jquery.com/jquery-git.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="index.js"></script>
 
 </head>
 <body>
@@ -153,6 +152,13 @@
                     <input type="text" class="form-control" id="country" name="country" placeholder="Enter Country" value="India" disabled>
                     <!-- <small id="countryError" class="form-text text-muted text-danger">error</small>-->
                 </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label for="pincode">Pincode: </label>
+                    <input type="number" class="form-control" id="pincode" oninput="validatePinCode('#pincode', 'pincodeError')" name="pincode" placeholder="Enter Pincode">
+                    <small id="pincodeError" class="form-text text-muted text-danger">Please Enter Valid Pincode !!!</small>
+                </div>
             </div><br>
             <div class="d-flex">    
                 <label class="form-label">Technologies known:</label>
@@ -209,7 +215,6 @@
                   <th class="py-5 bold-text" rowspan="2">Designation</th>
                   <th class="py-5 bold-text" rowspan="2">Technologies known</th>
                   <th class="py-5 bold-text" rowspan="2">Relevant experience</th>
-                  <th class="py-5 bold-text" rowspan="2">Total experience</th>
                   <th class="py-5 bold-text" rowspan="2">Action</th>
                 </tr>
                 <tr>
@@ -217,37 +222,14 @@
                   <td class="bold-text">Contact no.</td>
                   <td class="bold-text">Residential address</td>
                 </tr>
-              </thead>
-              <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Mr. Rathod Manish Kanubhai</td>
-                    <td>Male</td>
-                    <td>manish.rathod@bacancy.com</td>
-                    <td>1234567890</td>
-                    <td>001, Dhriv park soc., Godadara, Surat, Gujrat - 395010</td>
-                    <td>Trainee - 22</td>
-                    <td>NodeJS</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td><span class="btn btn-sm btn-danger">Delete</span></td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Mr. Rathod Manish Kanubhai</td>
-                    <td>Male</td>
-                    <td>manish.rathod@bacancy.com</td>
-                    <td>1234567890</td>
-                    <td>001, Dhriv park soc., Godadara, Surat, Gujrat - 395010</td>
-                    <td>Trainee - 22</td>
-                    <td>NodeJS</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td><span class="btn btn-sm btn-danger">Delete</span></td>
-                </tr>
-              </tbody>
+            </thead>
+            <tbody id="employee-data">
+            </tbody>
         </table>
     </div>
 
 </body>
+
+<script src="./index.js"></script>
+
 </html>
