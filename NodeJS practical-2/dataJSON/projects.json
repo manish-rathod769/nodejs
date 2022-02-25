@@ -1,0 +1,27 @@
+[
+  {
+    "ID": 1,
+    "title": "Inventory Management System",
+    "description": "It is an Inventory Management System"
+  },
+  {
+    "ID": 2,
+    "title": "Employee Management System",
+    "description": "It is an Employee Management System"
+  },
+  {
+    "ID": 3,
+    "title": "Project Management System",
+    "description": "It is a Project Management System"
+  },
+  {
+    "ID": 4,
+    "title": "Medical Information System",
+    "description": "It is a Medical Information System"
+  },
+  {
+    "ID": 5,
+    "title": "Online Food Ordering System",
+    "description": "It is an Online Food Ordering System"
+  }
+]
