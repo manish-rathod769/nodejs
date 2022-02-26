@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="style.css">
     
     <!-- Bootstrap JavaScript -->
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
     <script src="https://code.jquery.com/jquery-git.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -72,7 +71,7 @@
                 </div>
                 <div class="col">
                     <label for="contactNum">Contact Number: </label>
-                    <input type="number" class="form-control" id="contactNum" name="contactNum" oninput="validateContactNumberField('#contactNum', 'contactNumError')" placeholder="Enter Contact Number" formnovalidate>
+                    <input type="number" class="form-control" id="contactNum" name="contactNum" oninput="validateContactNumberField('#contactNum', 'contactNumError')" placeholder="Enter Contact Number" min="0" formnovalidate>
                     <small id="contactNumError" class="form-text text-muted text-danger">Enter Valid Contact Number !!!</small>
                 </div>
             </div>
@@ -80,7 +79,7 @@
             <div class="row my-3">
                 <div class="col">
                     <label for="houseNum">House Number: </label>
-                    <input type="number" class="form-control" id="houseNum" name="houseNum" oninput="validateAddressField('#houseNum', 'houseNumError')" placeholder="Enter House Number" formnovalidate>
+                    <input type="number" class="form-control" id="houseNum" name="houseNum" oninput="validateAddressField('#houseNum', 'houseNumError')" placeholder="Enter House Number" min="0" formnovalidate>
                     <small id="houseNumError" class="form-text text-muted text-danger">Enter Valid House Number !!!</small>
                 </div>
                 <div class="col">
@@ -150,31 +149,52 @@
                 <div class="col">
                     <label for="country">Coutry: </label>
                     <input type="text" class="form-control" id="country" name="country" placeholder="Enter Country" value="India" disabled>
-                    <!-- <small id="countryError" class="form-text text-muted text-danger">error</small>-->
                 </div>
             </div>
             <div class="row">
                 <div class="col-6">
                     <label for="pincode">Pincode: </label>
-                    <input type="number" class="form-control" id="pincode" oninput="validatePinCode('#pincode', 'pincodeError')" name="pincode" placeholder="Enter Pincode">
+                    <input type="number" class="form-control" id="pincode" oninput="validatePinCode('#pincode', 'pincodeError')" name="pincode" min="0" placeholder="Enter Pincode">
                     <small id="pincodeError" class="form-text text-muted text-danger">Please Enter Valid Pincode !!!</small>
                 </div>
             </div><br>
-            <div class="d-flex">    
-                <label class="form-label">Technologies known:</label>
-                <div>&nbsp;
-                    <input type="checkbox" class="form-check-input" id="nodejs" oninput="validateTechnologyKnownField('techKnownError')" name="techKnown" value="NodeJs" formnovalidate>
-                    <label class="form-check-label" for="nodejs">NodeJs&nbsp;&nbsp;</label>
-                    <input type="checkbox" class="form-check-input" id="reactjs" oninput="validateTechnologyKnownField('techKnownError')" name="techKnown" value="ReactJs" formnovalidate>
-                    <label class="form-check-label" for="reactjs">ReactJs&nbsp;&nbsp;</label>
-                    <input type="checkbox" class="form-check-input" id="vuejs" oninput="validateTechnologyKnownField('techKnownError')" name="techKnown" value="VueJs" formnovalidate>
-                    <label class="form-check-label" for="vuejs">VueJs&nbsp;&nbsp;</label>
-                    <input type="checkbox" class="form-check-input" id="ror" oninput="validateTechnologyKnownField('techKnownError')" name="techKnown" value="ROR" formnovalidate>
-                    <label class="form-check-label" for="ror">ROR&nbsp;&nbsp;</label>
-                    <input type="checkbox" class="form-check-input" id="reactnative" oninput="validateTechnologyKnownField('techKnownError')" name="techKnown" value="React native" formnovalidate>
-                    <label class="form-check-label" for="reactnative">React native&nbsp;&nbsp;</label>
-                    <input type="checkbox" class="form-check-input" id="flutter" oninput="validateTechnologyKnownField('techKnownError')" name="techKnown" value="Flutter" formnovalidate>
-                    <label class="form-check-label" for="flutter">Flutter</label>
+            <label class="form-label">Technologies known:</label>
+            <div class="row">
+                <div class="col-lg-2 col-md-4">
+                    <input type="checkbox" class="form-check-input" id="nodejs" oninput="validateTechnologyKnownField('techKnownError')" name="techKnown" value="NodeJs">
+                    <label class="form-check-label" for="nodejs">&nbsp;NodeJS</label>
+                    <input type="number" class="form-control" id="NodeJsExp" name="NodeJsExp" oninput="validateTechExpYear('#NodeJsExp', 'NodeJsExpError')" min="0" disabled>
+                    <small id="NodeJsExpError" class="form-text text-muted text-danger mt-0">Please Enter Valid NoseJS Experience !!!</small>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <input type="checkbox" class="form-check-input" id="reactJS" oninput="validateTechnologyKnownField('techKnownError')" name="techKnown" value="ReactJs">
+                    <label class="form-check-label" for="reactJS">&nbsp;ReactJS</label>
+                    <input type="number" class="form-control" id="ReactJsExp" name="ReactJsExp" oninput="validateTechExpYear('#ReactJsExp', 'ReactJsExpError')" min="0" disabled>
+                    <small id="ReactJsExpError" class="form-text text-muted text-danger mt-0">Please Enter Valid ReactJS Experience !!!</small>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <input type="checkbox" class="form-check-input" id="vueJS" oninput="validateTechnologyKnownField('techKnownError')" name="techKnown" value="VueJs">
+                    <label class="form-check-label" for="vueJS"&nbsp;>VueJS</label>
+                    <input type="number" class="form-control" id="VueJsExp" name="VueJsExp" oninput="validateTechExpYear('#VueJsExp', 'VueJsExpError')" min="0" disabled>
+                    <small id="VueJsExpError" class="form-text text-muted text-danger mt-0">Please Enter Valid VueJS Experience !!!</small>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <input type="checkbox" class="form-check-input" id="ror" oninput="validateTechnologyKnownField('techKnownError')" name="techKnown" value="ROR" min="0">
+                    <label class="form-check-label" for="ror">&nbsp;ROR</label>
+                    <input type="number" class="form-control" id="RORExp" name="RORExp" oninput="validateTechExpYear('#RORExp', 'RORExpError')" min="0" disabled>
+                    <small id="RORExpError" class="form-text text-muted text-danger mt-0">Please Enter Valid ROR Experience !!!</small>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <input type="checkbox" class="form-check-input" id="reactnative" oninput="validateTechnologyKnownField('techKnownError')" name="techKnown" value="ReactNative">
+                    <label class="form-check-label" for="reactnative">&nbsp;React native</label>
+                    <input type="number" class="form-control" id="ReactNativeExp" name="ReactNativeExp" oninput="validateTechExpYear('#ReactNativeExp', 'ReactNativeExpError')" min="0" disabled>
+                    <small id="ReactNativeExpError" class="form-text text-muted text-danger mt-0">Please Enter Valid ReactNative Experience !!!</small>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <input type="checkbox" class="form-check-input" id="flutter" oninput="validateTechnologyKnownField('techKnownError')" name="techKnown" value="Flutter" min="0">
+                    <label class="form-check-label" for="flutter">&nbsp;Flutter</label>
+                    <input type="number" class="form-control" id="FlutterExp" name="FlutterExp" oninput="validateTechExpYear('#FlutterExp', 'FlutterExpError')" min="0" disabled>
+                    <small id="FlutterExpError" class="form-text text-muted text-danger mt-0">Please Enter Valid Flutter Experience !!!</small>
                 </div>
             </div>
             <small id="techKnownError" class="form-text text-muted text-danger mt-0">Please Select Known Technologies !!!</small>
@@ -198,9 +218,7 @@
                     <input type="number" class="form-control" id="experience" name="experience" placeholder="Experience In Year" value="0.0" formnovalidate disabled>
                 </div>
             </div>
-            <!-- <button type="submit" class="btn btn-lg bg-info">Save</button> -->
             <p class="btn btn-primary btn-md m-0 my-3 bold-text" id="save-user-btn" onclick="validateForm()">Save</p>
-            <!-- <button type="" class="btn btn-primary btn-md m-0 my-3 bold-text">Save</button> -->
         </div>
     </form>
 
@@ -213,8 +231,8 @@
                   <th class="py-5 bold-text" rowspan="2">Gender</th>
                   <th class="bold-text" colspan="3">Contact details</th>
                   <th class="py-5 bold-text" rowspan="2">Designation</th>
-                  <th class="py-5 bold-text" rowspan="2">Technologies known</th>
-                  <th class="py-5 bold-text" rowspan="2">Relevant experience</th>
+                  <th class="py-5 bold-text" rowspan="2">Technologies known - Relevant experience</th>
+                  <th class="py-5 bold-text" rowspan="2">Total experience</th>
                   <th class="py-5 bold-text" rowspan="2">Action</th>
                 </tr>
                 <tr>
