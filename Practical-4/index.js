@@ -1,4 +1,6 @@
 let errorCount = 0;
+let selectedTech = [];
+
 const regExpForName = /^[A-Za-z\p{L}]+[\s]{0,1}[-A-Za-z\p{L}]*['\-]{0,1}[-A-Za-z\p{L}]+$/;
 const regExpForEmail = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
 
@@ -9,17 +11,22 @@ let validtaeNameOrEmailField = (id, errId, regExp) => {
 
 let validateContactNumberField = (id, errId) => {
     let fieldText = $(id).val();
-    checkCondition(fieldText.length == 10, errId);
+    checkCondition(fieldText.length == 10 && fieldText > 0, errId);
 }
 
 let validateAddressField = (id, errId) => {
     let fieldText = $(id).val();
+
     checkCondition(fieldText.length > 0, errId);
 }
 
 let validatePinCode = (id, errID) => {
     let fieldText = $(id).val();
-    checkCondition(fieldText.length == 6, errID)
+    checkCondition(fieldText.length == 6 && fieldText > 0, errID)
+}
+
+let unclicked = (id) => {
+    document.getElementById(id).disabled = true; document.getElementById(id).setAttribute("placeholder", ""); document.getElementById(id).value = "";
 }
 
 let validateTechnologyKnownField = (errId) => {
@@ -27,7 +34,26 @@ let validateTechnologyKnownField = (errId) => {
     document.querySelectorAll('input[type="checkbox"]:checked').forEach( (tech) => {
         fieldText.push(tech.value);
     });
+    selectedTech = fieldText;
+    // console.log(selectedTech);
     checkCondition(fieldText.length > 0, errId);
+    (!fieldText.length > 0) ? hideShowTechError("none") : hideShowTechError("block");
+    if(fieldText.length > 0){
+        ['NodeJs', 'ReactJs', 'VueJs', 'ROR', 'ReactNative', 'Flutter'].forEach( (tech) => {
+            if(fieldText.includes(tech)){
+                document.getElementById(tech + "ExpError").style.opacity = 1; document.getElementById(tech + "Exp").disabled = false; document.getElementById(tech + "Exp").setAttribute("placeholder", `${tech} Experience`);
+            }else{
+                document.getElementById(tech + "ExpError").style.opacity = 0; unclicked(tech + "Exp");
+            }
+        });
+    }else{
+        hideShowTechError("none");
+    }
+}
+
+let validateTechExpYear = (id, errID) => {
+    let fieldText = $(id).val();
+    checkCondition(fieldText.length > 0 && fieldText >0, errID);
 }
 
 let validateCareerStartDate = (id, errId) => {
@@ -57,6 +83,14 @@ let checkCondition = (cond, errId) => {
     }
 }
 
+let hideShowTechError = displayProp => {
+    document.getElementById("NodeJsExpError").style.display = displayProp; document.getElementById("ReactJsExpError").style.display = displayProp; document.getElementById("VueJsExpError").style.display = displayProp;
+    document.getElementById("RORExpError").style.display = displayProp; document.getElementById("ReactNativeExpError").style.display = displayProp; document.getElementById("FlutterExpError").style.display = displayProp;
+    if(displayProp === "none"){
+        unclicked("NodeJsExp"); unclicked("ReactJsExp"); unclicked("VueJsExp"); unclicked("RORExp"); unclicked("ReactNativeExp"); unclicked("FlutterExp");
+    }
+}
+
 let validateForm = () => {
     let userDataObj = {};
     errorCount = 0;
@@ -69,9 +103,15 @@ let validateForm = () => {
     validateAddressField("#addressLine", "addresslineError");
     validateAddressField("#landmark", "landmarkError");
     validateAddressField("#city", "cityError");
-    validateTechnologyKnownField("techKnownError");
     validateCareerStartDate("#careerstartdate", "careerstartdateError");
+    validateTechnologyKnownField("techKnownError");
+    if(selectedTech.length > 0){
+        selectedTech.forEach( tech => {
+            validateTechExpYear(`#${tech}Exp`, `${tech}ExpError`);
+        });
+    }
     validateAddressField("#designation", "designationError");
+
     if(errorCount == 0){
         document.getElementById("country").disabled = false;  document.getElementById("experience").disabled = false;
         let userData = $("#save-user-from").serializeArray(), techKnown = [];
@@ -81,22 +121,32 @@ let validateForm = () => {
         });
         userData.forEach( (obj) => {
             userDataObj[obj.name] = obj.value;
-        })
-        // console.log(userDataObj);
-        userDataObj.id = checkForID();
+        });
+        
+        (isDataPresent()) ? userDataObj.id = checkForID() : userDataObj.id = 1;
         userDataObj.tech = techKnown;
         delete userDataObj.techKnown;
-        // localStorage.setItem("usersDataInStr", "[" + JSON.stringify(userDataObj) + "]");
-        // console.log( "[" + JSON.stringify(userDataObj) + "]");
-        let usersInLocalStorage = localStorage.getItem("usersDataInStr");
-        usersInLocalStorage = usersInLocalStorage.substring(0, usersInLocalStorage.length-1);
-        let newUserDataInStr = usersInLocalStorage + "," + JSON.stringify(userDataObj) + "]";
-        localStorage.setItem("usersDataInStr", newUserDataInStr);
+        console.log(userDataObj);
+        if(isDataPresent()) {
+            let dataInObj = JSON.parse(localStorage.getItem("usersDataInStr"));
+            dataInObj.push(userDataObj);
+            localStorage.setItem("usersDataInStr", JSON.stringify(dataInObj));
+        }else {
+            let dataInObj = [];
+            dataInObj.push(userDataObj);
+            localStorage.setItem("usersDataInStr", JSON.stringify(dataInObj));
+        }
         alert("Data inserted successfully...");
         window.location.reload();
     }else{
         alert("Please Enter Valid Inputs  !!!");
+        hideShowTechError("none");
     }
+}
+
+let isDataPresent = () => {
+    let data = localStorage.getItem("usersDataInStr");
+    return (data) ? true : false;  
 }
 
 let checkForID = ()=> {
@@ -112,12 +162,27 @@ let checkForID = ()=> {
     }
 }
 
+let deleteUser = id => {
+    let uid = id.substring(4);
+    let userdInObj = JSON.parse(localStorage.getItem("usersDataInStr"));
+    if(userdInObj.length == 1){
+        localStorage.removeItem("usersDataInStr");
+    }else{
+        let usersAfterDelete = [];
+        userdInObj.forEach( obj => {
+            if(obj.id != uid){
+                usersAfterDelete.push(obj);
+            }
+        });
+        localStorage.setItem("usersDataInStr", JSON.stringify(usersAfterDelete));
+    }
+    alert("Data deleted successfully !!!");
+    window.location.reload();
+}
+
 let LoadData = () => {
     const mytable = document.getElementById("employee-data");
-    // let users = localStorage.getItem("usersDataInStr");
-    // console.log(JSON.parse(users))
     let users = JSON.parse(localStorage.getItem("usersDataInStr"));
-    // console.log(JSON.stringify(users));
     users.forEach( (obj) => {
         let newRow = document.createElement("tr");
         let cell1 = document.createElement("td"); cell1.innerText = obj.id; newRow.appendChild(cell1);
@@ -127,7 +192,14 @@ let LoadData = () => {
         let cell5 = document.createElement("td"); cell5.innerText = obj.contactNum; newRow.appendChild(cell5);
         let cell6 = document.createElement("td"); cell6.innerText = `${obj.houseNum}, ${obj.addressLine}, ${obj.landmark}, ${obj.city}, ${obj.state}, ${obj.country} - ${obj.pincode}`; newRow.appendChild(cell6);
         let cell7 = document.createElement("td"); cell7.innerText = obj.designation; newRow.appendChild(cell7);
-        let cell8 = document.createElement("td"); cell8.innerText = obj.tech; newRow.appendChild(cell8);
+        let cell8 = document.createElement("td");
+
+        let tech_Exp = "";
+        obj.tech.forEach( tech => {
+            let exp = `${tech}Exp`;
+            tech_Exp += `${tech} - ${obj[exp]}\n`;
+        });
+        cell8.innerText = tech_Exp; newRow.appendChild(cell8);
         let cell9 = document.createElement("td"); cell9.innerText = obj.experience; newRow.appendChild(cell9);
         
         let btnCell = document.createElement("td");
@@ -141,18 +213,6 @@ let LoadData = () => {
         mytable.appendChild(newRow);
     });
 }
-LoadData();
 
-let deleteUser = id => {
-    let uid = id.substring(4);
-    let userdInObj = JSON.parse(localStorage.getItem("usersDataInStr"));
-    let usersAfterDelete = [];
-    userdInObj.forEach( obj => {
-        if(obj.id != uid){
-            usersAfterDelete.push(obj);
-        }
-    });
-    localStorage.setItem("usersDataInStr", JSON.stringify(usersAfterDelete));
-    alert("Data deleted successfully !!!");
-    window.location.reload();
-}
+(isDataPresent()) ? LoadData() : alert("Data does not exist !!!");
+hideShowTechError("none");
