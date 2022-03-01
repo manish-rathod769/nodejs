@@ -42,6 +42,26 @@ const server = http.createServer( async (req, res) => {
             })
             .catch(err => console.error(err));
         }
+    }else if(req.method === 'POST'){
+        let dataToBeAdded = "";
+        req.on('data', chunk => {
+            dataToBeAdded += chunk;
+        });
+        req.on('end', () => {
+            dataToBeAdded = JSON.parse(dataToBeAdded);
+            dataToBeAdded.ID = getUserID();
+            readData("./jobs.json")
+            .then( data => {
+                data = JSON.parse(data);
+                data.push(dataToBeAdded);
+                writeToFile("./jobs.json", data)
+                .then( (data) => {
+                    console.log("Data added successfully...")
+                    res.end();
+                })
+                .catch( (err) => console.error(err));
+            }).catch(err => console.error(err));
+        });
     }
 });
 
