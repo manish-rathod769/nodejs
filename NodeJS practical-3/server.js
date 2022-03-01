@@ -10,6 +10,31 @@ let readData = path => {
     })
 }
 
+let getUserID = () => {
+    let count; let idArr =[];
+    let userDataInObj = JSON.parse(fs.readFileSync("./jobs.json", 'utf-8', err => {
+        if(err) console.error(err);
+    }));
+    userDataInObj.forEach(( obj => {
+        idArr.push(obj.ID);
+    }));
+    for(let i=1; ;i++){
+        if(!idArr.includes(i)){
+            count = i;
+            return count;
+        }
+    }
+}
+
+let writeToFile = (filePath, data) => {
+    return new Promise((resolve, reject) => {
+        fs.writeFile(filePath, JSON.stringify(data), (err) => {
+            if(err) return reject(err);
+            resolve(data);
+        });
+    })
+}
+
 const server = http.createServer( async (req, res) => {
     if(req.method === 'GET'){
         const url = new URL(req.url, "http://localhost:3010");
@@ -79,7 +104,7 @@ const server = http.createServer( async (req, res) => {
                 });
                 req.on('end', () =>{
                     dataToBeUpdate = JSON.parse(dataToBeUpdate);
-                    console.log(dataToBeUpdate);
+                    // console.log(dataToBeUpdate);
                     data.forEach( jobObj => {
                         if(jobObj.ID === id) {
                             for( const [key, value] of Object.entries(dataToBeUpdate)){
