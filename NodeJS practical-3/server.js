@@ -62,6 +62,50 @@ const server = http.createServer( async (req, res) => {
                 .catch( (err) => console.error(err));
             }).catch(err => console.error(err));
         });
+    }else if(req.method == "PUT"){
+        const url = new URL(req.url, "http://localhost:3010");
+        const id = parseInt(url.searchParams.get("id"));
+        readData("./jobs.json")
+        .then( data => {
+            let idArr = [];
+            data = JSON.parse(data.toString());
+            data.forEach( obj => {
+                idArr.push(obj.ID);
+            });
+            if(idArr.includes(id)){
+                let dataToBeUpdate = "";
+                req.on('data', chunk => {
+                    dataToBeUpdate += chunk;
+                });
+                req.on('end', () =>{
+                    dataToBeUpdate = JSON.parse(dataToBeUpdate);
+                    console.log(dataToBeUpdate);
+                    data.forEach( jobObj => {
+                        if(jobObj.ID === id) {
+                            for( const [key, value] of Object.entries(dataToBeUpdate)){
+                                if(typeof value === 'string'){
+                                    jobObj[key] = value;
+                                }else{
+                                    for( const [key2, value2] of Object.entries(value)){
+                                        jobObj[key][key2] = value2;
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    writeToFile("./jobs.json", data)
+                    .then( (data) => {
+                        console.log("Data Updated successfully...")
+                        res.end();
+                    })
+                    .catch( (err) => console.error(err));
+                });
+            }else{
+                console.log("Data does not exist !!!");
+                res.end();
+            }
+        })
+        .catch( (err) => console.error(err));
     }
 });
 
