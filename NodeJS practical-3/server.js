@@ -106,6 +106,39 @@ const server = http.createServer( async (req, res) => {
             }
         })
         .catch( (err) => console.error(err));
+    }else if(req.method === "DELETE"){
+        const url = new URL(req.url, "http://localhost:3010");
+        const id = parseInt(url.searchParams.get("id"));
+        readData("./jobs.json")
+        .then( data => {
+            let idArr = [];
+            data = JSON.parse(data.toString());
+            data.forEach( obj => {
+                idArr.push(obj.ID);
+            });
+            if(idArr.includes(id)){
+                readData("./jobs.json").then( data => {
+                    let dataToReplace = [];
+                    data = JSON.parse(data);
+                    data.forEach( obj => {
+                        if(obj.ID != id){
+                            dataToReplace.push(obj);
+                        }
+                    });
+                    writeToFile("./jobs.json", dataToReplace)
+                    .then( (data) => {
+                        console.log("Data Deleted successfully...")
+                        res.end();
+                    })
+                    .catch( (err) => console.error(err));
+                })
+                .catch(err => console.error(err));
+            }else{
+                console.log("Data does not exist !!!");
+                res.end();
+            }
+        })
+        .catch( (err) => console.error(err));
     }
 });
 
