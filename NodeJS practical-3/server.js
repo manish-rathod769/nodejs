@@ -1,5 +1,12 @@
 const http = require('http');
 const fs = require('fs');
+const path = require('path');
+
+const filePath = path.format({
+    root: "/",
+    dir: __dirname,
+    base: "jobs.json"
+});
 
 let readData = path => {
     return new Promise((resolve, reject) => {
@@ -12,7 +19,7 @@ let readData = path => {
 
 let getUserID = () => {
     let count; let idArr =[];
-    let userDataInObj = JSON.parse(fs.readFileSync("./jobs.json", 'utf-8', err => {
+    let userDataInObj = JSON.parse(fs.readFileSync(filePath, 'utf-8', err => {
         if(err) console.error(err);
     }));
     userDataInObj.forEach(( obj => {
@@ -40,12 +47,19 @@ const server = http.createServer( async (req, res) => {
         const url = new URL(req.url, "http://localhost:3010");
         let id = url.searchParams.get("id");
         if(typeof id === 'object'){
-            readData("./jobs.json").then(data => console.log(JSON.parse(data))).catch(err => console.error(err));
-            console.log("All Data Fetched Successfully...");
-            res.end();
+            readData(filePath)
+            .then(data => {
+                res.writeHead(200, { 'content-type': 'application/json' });
+                res.end(data);
+            })
+            .catch(err =>{
+                res.writeHead(404, { 'content-type': 'text/plain' });
+                res.end(err.message);
+            });
+            // console.log("All Data Fetched Successfully...");
         }else{
             id = parseInt(id);
-            readData("./jobs.json")
+            readData(filePath)
             .then(data => {
                 let idArr = [];
                 data = JSON.parse(data);
@@ -57,15 +71,19 @@ const server = http.createServer( async (req, res) => {
                     data.forEach( jobObj => {
                         if(jobObj.ID === id){
                             console.log(jobObj);
+                            rres.writeHead(200, "success", { 'content-type': 'application/json' });
+                            res.end(JSON.stringify(jobObj));
                         }
                     });
-                    res.end();
                 }else{
-                    console.log("Data does not exist...");
-                    res.end();
+                    res.writeHead(404, { 'content-type': 'text/plain' });
+                    res.end("Data does not exist...");
                 }
             })
-            .catch(err => console.error(err));
+            .catch(err => {
+                res.writeHead(404, { 'content-type': 'text/plain' });
+                res.end(err.message);
+            });
         }
     }else if(req.method === 'POST'){
         let dataToBeAdded = "";
@@ -75,22 +93,29 @@ const server = http.createServer( async (req, res) => {
         req.on('end', () => {
             dataToBeAdded = JSON.parse(dataToBeAdded);
             dataToBeAdded.ID = getUserID();
-            readData("./jobs.json")
+            readData(filePath)
             .then( data => {
                 data = JSON.parse(data);
                 data.push(dataToBeAdded);
-                writeToFile("./jobs.json", data)
+                writeToFile(filePath, data)
                 .then( (data) => {
-                    console.log("Data added successfully...")
-                    res.end();
+                    console.log("Data added successfully...");
+                    res.writeHead(200, { 'content-type': 'application/json' });
+                    res.end(JSON.stringify(dataToBeAdded));
                 })
-                .catch( (err) => console.error(err));
-            }).catch(err => console.error(err));
+                .catch( (err) => { 
+                    res.writeHead(415, { 'content-type': 'text/plain' });
+                    res.end(err.message);
+                });
+            }).catch(err => {
+                res.writeHead(404, { 'content-type': 'text/plain' });
+                res.end(err.message);
+            });
         });
     }else if(req.method == "PUT"){
         const url = new URL(req.url, "http://localhost:3010");
         const id = parseInt(url.searchParams.get("id"));
-        readData("./jobs.json")
+        readData(filePath)
         .then( data => {
             let idArr = [];
             data = JSON.parse(data.toString());
@@ -118,23 +143,30 @@ const server = http.createServer( async (req, res) => {
                             }
                         }
                     });
-                    writeToFile("./jobs.json", data)
+                    writeToFile(filePath, data)
                     .then( (data) => {
-                        console.log("Data Updated successfully...")
-                        res.end();
+                        console.log("Data Updated successfully...");
+                        res.writeHead(200, { 'content-type': 'application/json' });
+                        res.end("Data Updated successfully...");
                     })
-                    .catch( (err) => console.error(err));
+                    .catch( (err) => {
+                        res.writeHead(415, { 'content-type': 'text/plain' });
+                        res.end(err.message);
+                    });
                 });
             }else{
-                console.log("Data does not exist !!!");
-                res.end();
+                res.writeHead(404, { 'content-type': 'text/plain' });
+                res.end("Data does not exist !!!");
             }
         })
-        .catch( (err) => console.error(err));
+        .catch( (err) => {
+            res.writeHead(404, { 'content-type': 'text/plain' });
+            res.end(err.message);
+        });
     }else if(req.method === "DELETE"){
         const url = new URL(req.url, "http://localhost:3010");
         const id = parseInt(url.searchParams.get("id"));
-        readData("./jobs.json")
+        readData(filePath)
         .then( data => {
             let idArr = [];
             data = JSON.parse(data.toString());
@@ -142,7 +174,7 @@ const server = http.createServer( async (req, res) => {
                 idArr.push(obj.ID);
             });
             if(idArr.includes(id)){
-                readData("./jobs.json").then( data => {
+                readData(filePath).then( data => {
                     let dataToReplace = [];
                     data = JSON.parse(data);
                     data.forEach( obj => {
@@ -150,20 +182,27 @@ const server = http.createServer( async (req, res) => {
                             dataToReplace.push(obj);
                         }
                     });
-                    writeToFile("./jobs.json", dataToReplace)
+                    writeToFile(filePath, dataToReplace)
                     .then( (data) => {
-                        console.log("Data Deleted successfully...")
-                        res.end();
+                        console.log("Data Deleted successfully...");
+                        res.writeHead(200, { 'content-type': 'application/json' });
+                        res.end("Data deleted successfully....");
                     })
-                    .catch( (err) => console.error(err));
+                    .catch( (err) => {
+                        res.writeHead(415, { 'content-type': 'text/plain' });
+                        res.end(err.message);
+                    });
                 })
                 .catch(err => console.error(err));
             }else{
-                console.log("Data does not exist !!!");
-                res.end();
+                res.writeHead(404, { 'content-type': 'text/plain' });
+                res.end("Data does not exist !!!");
             }
         })
-        .catch( (err) => console.error(err));
+        .catch( (err) => {
+            res.writeHead(404, { 'content-type': 'text/plain' });
+            res.end(err.message);
+        });
     }
 });
 
