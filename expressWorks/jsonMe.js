@@ -9,6 +9,6 @@ app.get('/books', (req, res) => {
     if(err) throw err;
     res.json(JSON.parse(data));
   });
-})
+});
 
 app.listen(portNum);
