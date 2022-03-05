@@ -7,18 +7,25 @@ const fullname = argv.fullname;
 const emailID = argv.emailID;
 const projectAssigned = argv.projectAssigned;
 
-if(!["add", "update", "delete", "fetchOne", "fetchOne", "fetchAll"].includes(operation)){
+if(!["add", "update", "delete", "fetchOne", "fetchAll"].includes(operation)){
     console.log("Invalid operation!!! \nPlease enter valid operation!!!");
     return;
 }
-if(operation === "add"){   
+
+switch(operation){
+  case "add":
     addUSer("./users.txt", argv);
-}else if(operation === "update"){
+    break;
+  case "update":
     updateUser("./users.txt", argv);
-}else if(operation === "delete"){
+    break;
+  case "delete":
     deleteUser("./users.txt", argv);
-}else if(operation === "fetchOne"){
+    break;
+  case "fetchOne":
     fetchOne("./users.txt", argv);
-}else{
+    break;
+  default:
     fetchAll("./users.txt");
+    break; 
 }
