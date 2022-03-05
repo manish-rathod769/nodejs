@@ -1,10 +1,6 @@
 const yargs = require('yargs');
 const argv = yargs.argv;
-const addUSer = require('./addUser');
-const updateUser = require('./updateUser');
-const deleteUser = require('./deleteUser');
-const fetchOne = require('./fetchOne');
-const fetchAll = require('./fetchAll');
+const { addUser, deleteUser, fetchAll, fetchOne, updateUser } = require('./userOperation');
 
 const operation = argv.operation;
 const fullname = argv.fullname;
