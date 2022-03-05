@@ -43,10 +43,12 @@ let writeToFile = (filePath, data) => {
 }
 
 const server = http.createServer( async (req, res) => {
+  const url = new URL(req.url, "http://localhost:3010");
+  // console.log(typeof req.url);
+  const api = req.url.split("?")[0];
     if(req.method === 'GET'){
-        const url = new URL(req.url, "http://localhost:3010");
-        let id = url.searchParams.get("id");
-        if(typeof id === 'object'){
+      let id = url.searchParams.get("id");
+        if(typeof id === 'object' && api === '/api/fetchAll'){
             readData(filePath)
             .then(data => {
                 res.writeHead(200, { 'content-type': 'application/json' });
@@ -57,7 +59,7 @@ const server = http.createServer( async (req, res) => {
                 res.end(err.message);
             });
             // console.log("All Data Fetched Successfully...");
-        }else{
+        }else if(typeof id != 'object' && api === '/api/fetchOne'){
             id = parseInt(id);
             readData(filePath)
             .then(data => {
@@ -67,11 +69,11 @@ const server = http.createServer( async (req, res) => {
                     idArr.push(job.ID);
                 })
                 if(idArr.includes(id)){
-                    console.log("Data fetched successfully...");
+                    // console.log("Data fetched successfully...");
                     data.forEach( jobObj => {
                         if(jobObj.ID === id){
-                            console.log(jobObj);
-                            rres.writeHead(200, "success", { 'content-type': 'application/json' });
+                            // console.log(jobObj);
+                            res.writeHead(200, "success", { 'content-type': 'application/json' });
                             res.end(JSON.stringify(jobObj));
                         }
                     });
@@ -84,8 +86,11 @@ const server = http.createServer( async (req, res) => {
                 res.writeHead(404, { 'content-type': 'text/plain' });
                 res.end(err.message);
             });
+        }else{
+          res.writeHead(404, {'content-type': 'text/plain'});
+          res.end("Api or requested method type does not match!!!");
         }
-    }else if(req.method === 'POST'){
+    }else if(req.method === 'POST' && api === '/api/addUser'){
         let dataToBeAdded = "";
         req.on('data', chunk => {
             dataToBeAdded += chunk;
@@ -99,7 +104,7 @@ const server = http.createServer( async (req, res) => {
                 data.push(dataToBeAdded);
                 writeToFile(filePath, data)
                 .then( (data) => {
-                    console.log("Data added successfully...");
+                    // console.log("Data added successfully...");
                     res.writeHead(200, { 'content-type': 'application/json' });
                     res.end(JSON.stringify(dataToBeAdded));
                 })
@@ -112,8 +117,7 @@ const server = http.createServer( async (req, res) => {
                 res.end(err.message);
             });
         });
-    }else if(req.method == "PUT"){
-        const url = new URL(req.url, "http://localhost:3010");
+    }else if(req.method == "PUT" && api === '/api/updateUser'){
         const id = parseInt(url.searchParams.get("id"));
         readData(filePath)
         .then( data => {
@@ -163,8 +167,7 @@ const server = http.createServer( async (req, res) => {
             res.writeHead(404, { 'content-type': 'text/plain' });
             res.end(err.message);
         });
-    }else if(req.method === "DELETE"){
-        const url = new URL(req.url, "http://localhost:3010");
+    }else if(req.method === "DELETE" && api === '/api/deleteUser'){
         const id = parseInt(url.searchParams.get("id"));
         readData(filePath)
         .then( data => {
@@ -184,7 +187,7 @@ const server = http.createServer( async (req, res) => {
                     });
                     writeToFile(filePath, dataToReplace)
                     .then( (data) => {
-                        console.log("Data Deleted successfully...");
+                        // console.log("Data Deleted successfully...");
                         res.writeHead(200, { 'content-type': 'application/json' });
                         res.end("Data deleted successfully....");
                     })
@@ -203,6 +206,9 @@ const server = http.createServer( async (req, res) => {
             res.writeHead(404, { 'content-type': 'text/plain' });
             res.end(err.message);
         });
+    }else{
+      res.writeHead(404, {'content-type': 'text/plain'});
+      res.end("Api or requested method type does not match!!!");
     }
 });
 
