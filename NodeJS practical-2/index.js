@@ -6,9 +6,11 @@ const users = "./dataJSON/users.json";
 const projects = "./dataJSON/projects.json";
 const tasks = "./dataJSON/tasks.json";
 
-const callbackApproach = require("./approaches/callback");
-const promiseApproach = require('./approaches/promise');
-const asyncAwaitApproach = require("./approaches/asyncAwait");
+// const callbackApproach = require("./approaches/callback");
+// const promiseApproach = require('./approaches/promise');
+// const asyncAwaitApproach = require("./approaches/asyncAwait");
+
+const { callbackApproach, promiseApproach, asyncAwaitApproach } = require("./approaches");
 
 if(!["callback", "promise", "asyncAwait"].includes(approache)) {
     console.log("Please Enter valid operation !!!");
