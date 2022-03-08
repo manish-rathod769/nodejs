@@ -1,16 +1,20 @@
 const { MongoClient } = require('mongodb');
-const url = "mongodb://localhost:27017/learnyoumongo";
-const agePara = Number(process.argv[2]);
+const url = "mongodb://localhost:27017";
+const client = new MongoClient(url);
+const age = Number(process.argv[2]);
 
-MongoClient.connect(url, (err, db) => {
-  if(err) throw err;
-  const col = db.collection('parrots');
-  col.find({
-    // age: {$gt:  agePara}
-  }).toArray( (err, documents) => {
-    if(err) throw err;
-    console.log(documents);
-    db.close();
-  });  
+async function connection(){
+  try{
+    await client.connect();
+    const db = client.db("demoDB");
+    const collection = db.collection("students");
+    const data = await collection.find({}).toArray();
+    console.log(data)
+  }catch(e){
+    console.error(e);
+  }finally{
+    client.close();
+  }
+}
 
-});
+connection();
