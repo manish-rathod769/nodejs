@@ -1,0 +1,3 @@
+{"_id":{"$oid":"62264faa2a63ba5a0791c9fc"},"name":"Manish Rathod","contactDetails":{"email":"manish.rathod@bacancy.com","phoneNumber":7.283848276e+09},"technologyAssigned":"NodeJS","city":"Vadodara"}
+{"_id":{"$oid":"622652da2a63ba5a0791c9ff"},"name":"Krudhit Dudhat","contactDetails":{"emaill":"krushit.dudhat@bacancy.com","phoneNumber":9.87456321e+09},"technologyAssigned":"NodeJS","city":"Vadodara"}
+{"_id":{"$oid":"6226d21f6e11e499518d1c8c"},"name":"Vinayak Chavan","contactDetails":{"email":"vinayak.chavan@bacancy.com","phoneNumber":7.89456123e+09},"technologyAssigned":"NodeJS"}
