@@ -1,13 +1,20 @@
 const { MongoClient } = require('mongodb');
-const url = "mongodb://localhost:27017/learnyoumongo";
-const fname = process.argv[2];
-const lname = process.argv[3];
+const url = "mongodb://localhost:27017";
+const client = new MongoClient(url);
+const obj = { firstName: process.argv[2], lastName: process.argv[3]}
 
-MongoClient.connect(url, (err, db) => {
-  if (err) throw err;
-  db.collection('docs').insert({firatname: fname, lastname: lname}, (err, document) => {
-    if(err) throw err;
-    console.log(JSON.stringify(document.ops[0]));
-  });
-  db.close();
-})
+async function connection(){
+  try{
+    await client.connect();
+    const db = client.db("learnyoumongo");
+    const collection = db.collection("parrots");
+    const data = await collection.insertOne(obj);
+    console.log(JSON.stringify(obj));
+  }catch(e){
+    console.error(e);
+  }finally{
+    client.close();
+  }
+}
+
+connection();
