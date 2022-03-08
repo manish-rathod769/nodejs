@@ -1,12 +1,21 @@
 const { MongoClient } = require('mongodb');
-const url = `mongodb://localhost:27017/${process.argv[2]}`;
-const collectionName = process.argv[3];
-const id = process.argv[4];
+const url = "mongodb://localhost:27017";
+const dbName = process.argv[2];
+const collection = process.argv[3];
+const uid = process.argv[4];
 
-MongoClient.connect(url, (err, db) => {
-  if (err) throw err;
-  db.collection(collectionName).remove({_id: id}, (err) => {
-    if(err) throw err;
-    db.close();
-  });
-})
+const client = new MongoClient(url);
+
+async function connection(){
+  try{await client.connect();
+  const db = client.db(dbName);
+  const col = db.collection(collection);
+  const removeData = await col.deleteOne({_id: uid});
+  }catch(e){
+    console.error(e);
+  }finally{
+    client.close();
+  }
+}
+
+connection();
