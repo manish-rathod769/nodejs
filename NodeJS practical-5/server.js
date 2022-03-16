@@ -15,6 +15,7 @@ dotenv.config({path: "./config.env"})
 const portNum = process.env.PORT;
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // Connect application to the Database
 connectToDB();
@@ -22,20 +23,4 @@ connectToDB();
 // Load ROuters
 app.use("/", require("./routes/router"));
 
-// app.get("/view/data", async (req, res) => {
-//   try{
-//     let id = new Object("6230851ad3a4bd1f44346522");
-//     await userModel.findOneAndUpdate( id ,{ city: "ABD" }, {new: true}).then( console.log);
-//     res.end();
-//     await userModel.findOne({name: "Manish"}).then( users => {
-//       console.log(users);
-//       res.setHeader('Content-Type', 'application/json');
-//       res.status(200).json({users: users});
-//       res.end();
-//     })
-//   }catch(e){
-//     res.setHeader('Content-Type', 'application/json');
-//     res.status(404).json({ error: e.message });
-//   }
-// });
 app.listen(portNum, () => console.log(`Server runnig on http://localhost:${portNum}`));
