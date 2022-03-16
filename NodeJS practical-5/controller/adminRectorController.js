@@ -64,9 +64,28 @@ let adminRectorViewStudentController = async (req, res) => {
   }
 }
 
+let adminRectorSearchStudentController = async (req, res) => {
+  try{
+    let pageIndex = (req.query.page) ? Number(req.query.page) : 1;
+    let matchedDocs = "";
+    console.log(req.params.name)
+    if(req.params.name) matchedDocs = await studentModel.find({$text: {$search: req.params.name}}, {__v: 0}).skip((pageIndex-1)*2).limit(2);
+    if(!req.params.name) matchedDocs = await studentModel.find();
+    if(matchedDocs.length == 0) throw new Error("Not Found!!!");
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).json({ data: matchedDocs });
+    res.end()
+  }catch(e){
+    res.setHeader('Content-Type', 'application/json');
+    res.status(404).json({ error: e.message });
+    res.end();
+  }
+}
+
 module.exports = {
   adminLoginController,
   rectorLoginController,
   adminRectorAddStudentController,
-  adminRectorViewStudentController
+  adminRectorViewStudentController,
+  adminRectorSearchStudentController,
 }

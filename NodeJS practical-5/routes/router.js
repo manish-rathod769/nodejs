@@ -19,6 +19,9 @@ route.get('/rector/view/student/roomWise', validateAccessToken, adminRectorViewS
 route.post("/admin/login", adminLoginController);
 route.post("/rector/login", rectorLoginController);
 
+route.get('/admin/search/student/:name?/', validateAccessToken, adminRectorSearchStudentController);
+route.get('/rector/search/student/:name?/', validateAccessToken, adminRectorSearchStudentController);
+
 route.post("rector/login", )
 
 module.exports = route;
