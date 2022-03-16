@@ -82,10 +82,38 @@ let adminRectorSearchStudentController = async (req, res) => {
   }
 }
 
+let adminRectorCheckHostelController = async (req, res) => {
+  try{
+    let pageIndex = (req.query.page) ? Number(req.query.page) : 1;
+    console.log(pageIndex);
+    let hostelCapacityAndAvailableSeats = "";
+    if(req.params.hostelCode){
+      await hostelModel.find()
+      .then( hostels => {
+        let flag = hostels.some(hostel => hostel.hostelCode === Number(req.params.hostelCode));
+        if(!flag) throw new Error("Hostel code doen not exist!!!");
+      })
+      // If HostelCode is defines then check capacity of their particular 
+      hostelCapacityAndAvailableSeats = await hostelModel.aggregate([{$match: {hostelCode: Number(req.params.hostelCode)}}, {$lookup: {from: "floors", localField: "hostelCode", foreignField: "hostelCode", as:"floorDetails"}}, {$lookup: {from: "rooms", localField: "floorDetails.floorCode", foreignField: "floorCode", as:"roomDetails"}}, {$lookup: {from: "students", localField: "roomDetails.roomCode", foreignField: "allocatedRoomCode", as: "studentsAllocatedRoomDetails"}}, {$project: { _id: 0, hostelCode: "$hostelCode", totalSeat: {$sum: "$roomDetails.roomCapacity"}, availableSeat:{$subtract : [{$sum: "$roomDetails.roomCapacity"}, {$size: "$studentsAllocatedRoomDetails"}]}}}, {$skip: (pageIndex-1)*2}, {$limit: 2}]);
+    }else{
+      hostelCapacityAndAvailableSeats = await hostelModel.aggregate([{$lookup: {from: "floors", localField: "hostelCode", foreignField: "hostelCode", as:"floorDetails"}}, {$lookup: {from: "rooms", localField: "floorDetails.floorCode", foreignField: "floorCode", as:"roomDetails"}}, {$lookup: {from: "students", localField: "roomDetails.roomCode", foreignField: "allocatedRoomCode", as: "studentsAllocatedRoomDetails"}}, {$project: { _id: 0, hostelCode: "$hostelCode", totalSeat: {$sum: "$roomDetails.roomCapacity"}, availableSeat:{$subtract : [{$sum: "$roomDetails.roomCapacity"}, {$size: "$studentsAllocatedRoomDetails"}]}}}, {$skip: (pageIndex-1)*2}, {$limit: 2}]);
+    }
+    if(hostelCapacityAndAvailableSeats.length == 0) throw new Error("No more data found!!!");
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).json({data: hostelCapacityAndAvailableSeats});
+    res.end()
+  }catch(e){
+    res.setHeader('Content-Type', 'application/json');
+    res.status(404).json({ error: e.message });
+    res.end();
+  }
+}
+
 module.exports = {
   adminLoginController,
   rectorLoginController,
   adminRectorAddStudentController,
   adminRectorViewStudentController,
   adminRectorSearchStudentController,
+  adminRectorCheckHostelController
 }

@@ -22,6 +22,9 @@ route.post("/rector/login", rectorLoginController);
 route.get('/admin/search/student/:name?/', validateAccessToken, adminRectorSearchStudentController);
 route.get('/rector/search/student/:name?/', validateAccessToken, adminRectorSearchStudentController);
 
+route.get('/admin/check/hostel/:hostelCode?', validateAccessToken, adminRectorCheckHostelController);
+route.get('/rector/check/hostel/:hostelCode?', validateAccessToken, adminRectorCheckHostelController);
+
 route.post("rector/login", )
 
 module.exports = route;
