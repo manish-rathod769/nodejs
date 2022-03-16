@@ -109,11 +109,26 @@ let adminRectorCheckHostelController = async (req, res) => {
   }
 }
 
+let adminRectorViewRoomController = async (req, res) => {
+  try{
+    let pageIndex = (req.query.page) ? Number(req.query.page) : 1;
+
+    let docs = await floorModel.aggregate([{$lookup: {from: "rooms", localField: "floorCode", foreignField: "floorCode", as: "roomDetails"}}, {$project: {_id: 0, hostelCode: 0, __v: 0, "roomDetails._id": 0, "roomDetails.floorCode": 0, "roomDetails.__v": 0}}, {$skip: (pageIndex-1)*2}, {$limit: 2}])
+    if(docs.length == 0) throw new Error("No more data found!!!");
+    res.json({data: docs})
+  }catch(e){
+    res.setHeader('Content-Type', 'application/json');
+    res.status(404).json({ error: e.message });
+    res.end();
+  }
+}
+
 module.exports = {
   adminLoginController,
   rectorLoginController,
   adminRectorAddStudentController,
   adminRectorViewStudentController,
   adminRectorSearchStudentController,
-  adminRectorCheckHostelController
+  adminRectorCheckHostelController,
+  adminRectorViewRoomController
 }
