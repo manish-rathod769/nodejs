@@ -50,10 +50,23 @@ let adminRectorAddStudentController = async (req, res) => {
   }
 }
 
+let adminRectorViewStudentController = async (req, res) => {
+  try{
+    let pageIndex = (req.query.page) ? Number(req.query.page) : 1;
+    let studentRoomWise = await studentModel.aggregate([{$group: {_id : "$allocatedRoomCode", students: {$push: {firstName: "$firstName", lastName: "$lastName", email: "$email"}}}}, {$sort:{_id: 1}}, {$skip: (pageIndex-1)*2}, {$limit: 2}]);
+    if(studentRoomWise.length == 0) throw new Error("No more data Found!!!");
+    res.status(200).json({ data: studentRoomWise });
+    res.end()
+  }catch(e){
+    res.setHeader('Content-Type', 'application/json');
+    res.status(404).json({ error: e.message });
+    res.end();
+  }
 }
 
 module.exports = {
   adminLoginController,
   rectorLoginController,
   adminRectorAddStudentController,
+  adminRectorViewStudentController
 }
