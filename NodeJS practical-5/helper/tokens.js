@@ -2,7 +2,7 @@ const { sign } = require('jsonwebtoken');
 
 let createAccessToken = emailID => {
   return sign( {emailID}, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "2h"
+    expiresIn: "1d"
   });
 }
 
@@ -20,12 +20,10 @@ let sendAccessToken = (req, res, accessToken) => {
   res.end()
 }
 
-let sendRefreshToken = (req, res, refreshToken, cookiePath) => {
-  cookiePath.forEach( path => {
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      path: path
-    });
+let sendRefreshToken = (req, res, refreshToken) => {
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    path: "/refresh_token"
   });
 }
 

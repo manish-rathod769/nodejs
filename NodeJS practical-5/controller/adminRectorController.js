@@ -123,6 +123,19 @@ let adminRectorViewRoomController = async (req, res) => {
   }
 }
 
+let adminRectorCheckApproximateAvailableSeats = async (req, res) => {
+  try{
+    let { month, year } = req.params;
+    let [monthInt, yearInt] = [Number(month), Number(year)];
+    if(!month || !year) throw new Error("Please enter valid month and year!!!");
+    
+  }catch(e){
+    res.setHeader('Content-Type', 'application/json');
+    res.status(404).json({ error: e.message });
+    res.end();
+  }
+}
+
 module.exports = {
   adminLoginController,
   rectorLoginController,
@@ -130,5 +143,6 @@ module.exports = {
   adminRectorViewStudentController,
   adminRectorSearchStudentController,
   adminRectorCheckHostelController,
-  adminRectorViewRoomController
+  adminRectorViewRoomController,
+  adminRectorCheckApproximateAvailableSeats
 }

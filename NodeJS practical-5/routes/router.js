@@ -28,6 +28,9 @@ route.get('/rector/check/hostel/:hostelCode?', validateAccessToken, adminRectorC
 route.get('/admin/view/room/floorWise', validateAccessToken, adminRectorViewRoomController);
 route.get('/rector/view/room/floorWise', validateAccessToken, adminRectorViewRoomController);
 
+route.get('/admin/check/approximateAvailableSeats/:month/:year', validateAccessToken, adminRectorCheckApproximateAvailableSeats);
+route.get('/rector/check/approximateAvailableSeats/:month/:year', validateAccessToken, adminRectorCheckApproximateAvailableSeats);
+
 route.post("rector/login", )
 
 module.exports = route;
