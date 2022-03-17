@@ -1,5 +1,6 @@
 const { rectorModel, adminModel, hostelModel, floorModel, roomModel } = require("../model/models");
 const { verify } = require('jsonwebtoken');
+const { hash } = require('bcrypt');
 const insertDocUtil = require("../util/insertDocUtil");
 
 let adminAddRectorController = async (req, res) => {
