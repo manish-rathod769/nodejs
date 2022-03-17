@@ -31,6 +31,6 @@ route.get('/rector/view/room/floorWise', validateAccessToken, adminRectorViewRoo
 route.get('/admin/check/approximateAvailableSeats/:month/:year', validateAccessToken, adminRectorCheckApproximateAvailableSeats);
 route.get('/rector/check/approximateAvailableSeats/:month/:year', validateAccessToken, adminRectorCheckApproximateAvailableSeats);
 
-route.post("rector/login", )
+// route.post("rector/login", ) 
 
 module.exports = route;
