@@ -23,7 +23,7 @@ let loginUtil = async (req, res, model) => {
     
     await model.findByIdAndUpdate( matchedData[0]._id, { refreshToken: refreshToken })
     .then(() => {
-      sendRefreshToken(req, res, refreshToken, ["/admin/login", "/admin/add/hostel", "/admin/add/floor", "/admin/add/room", "/admin/add/rector", "admin/add/student", "rector/add/student"]);
+      sendRefreshToken(req, res, refreshToken);
       sendAccessToken(req, res, accessToken);
     })
 
