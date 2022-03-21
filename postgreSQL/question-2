@@ -1,0 +1,28 @@
+PostgreSQL
+
+Question-2 :
+
+
+◦ 2.4.1) Find all the users.
+	Command :  SELECT * FROM users;
+
+◦ 2.4.2) Find all the posts.
+	Command :  SELECT * FROM posts;
+
+◦ 2.4.3) Find all posts which are authored by "GoodGuyGreg".
+	Command :  SELECT * FROM posts WHERE username = ‘GoodGuyGreg’;
+
+◦ 2.4.4) Find all posts which are authored by "ScumbagSteve".
+	Command :  SELECT * FROM posts WHERE username = ‘ScumbagSteve’;
+
+◦ 2.4.5) Find all the comments.
+	Command :  SELECT * FROM comments;
+
+◦ 2.4.6) Find all comments which are authored by "GoodGuyGreg".
+	Command :  SELECT * FROM comments WHERE username = ‘GoodGuyGreg’;
+
+◦ 2.4.7) Find all comments which are authored by "ScumbagSteve".
+	Command :  SELECT * FROM comments WHERE username = ‘ScumbagSteve’;
+
+◦ 2.4.8) Find all comments belonging to the post "Reports a bug in your code".
+	Command :  SELECT * FROM comments, posts WHERE comments.post = posts.id AND posts.title = 'Reports a bug in your code';
