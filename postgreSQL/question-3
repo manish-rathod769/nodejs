@@ -1,0 +1,10 @@
+• Question-3 :      
+
+◦ 3.4.1) Fetch all the trainees with their project details, the result should only contain the fields: fullName, designation, department, technologiesKnown,projectDetails, primaryEmailID and also display the trainees in ascending order based on the fullName field.
+	Command :  select fullName, designation, department, technologiesKnown, projects, contacts.primaryEmailID from trainees join contacts on trainees.contactDetails = contacts.id GROUP BY fullname;
+
+◦ 3.4.2) Get the count of all the documents of tasks collection w/o using aggregation.
+	Command :  SELECT COUNT(*) FROM tasks;
+
+◦ 3.4.3) Fetch all the documents of the tasks collection grouped by the projectID field using aggregation.
+	Command :  SELECT array_agg(tasks.title) AS titles, projectID FROM tasks GROUP BY projectID;
