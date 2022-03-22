@@ -4,15 +4,15 @@ const { verify } = require('jsonwebtoken');
 const { hash } = require('bcrypt');
 const insertDocUtil = require("../util/insertDocUtil");
 
-let adminLoginController = async (req, res) => {
+let adminLogin = async (req, res) => {
   loginUtil(req, res, adminModel);
 }
 
-let rectorLoginController = async (req, res) => {
+let rectorLogin = async (req, res) => {
   loginUtil(req, res, rectorModel);
 }
 
-let adminRectorAddStudentController = (req, res) => {
+let adminRectorAddStudent = (req, res) => {
   try{
     let studentDetails = "";
     req.on('data', chunk => {
@@ -59,7 +59,7 @@ let adminRectorAddStudentController = (req, res) => {
   }
 }
 
-let adminRectorViewStudentController = async (req, res) => {
+let adminRectorViewStudent = async (req, res) => {
   try{
     let pageIndex = (req.query.page) ? Number(req.query.page) : 1;
     let studentRoomWise = await studentModel.aggregate([{$group: {_id : "$allocatedRoomCode", students: {$push: {firstName: "$firstName", lastName: "$lastName", email: "$email"}}}}, {$sort:{_id: 1}}, {$skip: (pageIndex-1)*2}, {$limit: 2}]);
@@ -73,7 +73,7 @@ let adminRectorViewStudentController = async (req, res) => {
   }
 }
 
-let adminRectorSearchStudentController = async (req, res) => {
+let adminRectorSearchStudent = async (req, res) => {
   try{
     let pageIndex = (req.query.page) ? Number(req.query.page) : 1;
     let matchedDocs = "";
@@ -91,7 +91,7 @@ let adminRectorSearchStudentController = async (req, res) => {
   }
 }
 
-let adminRectorCheckHostelController = async (req, res) => {
+let adminRectorCheckHostel = async (req, res) => {
   try{
     let pageIndex = (req.query.page) ? Number(req.query.page) : 1;
     console.log(pageIndex);
@@ -118,7 +118,7 @@ let adminRectorCheckHostelController = async (req, res) => {
   }
 }
 
-let adminRectorViewRoomController = async (req, res) => {
+let adminRectorViewRoom = async (req, res) => {
   try{
     let pageIndex = (req.query.page) ? Number(req.query.page) : 1;
 
@@ -156,13 +156,13 @@ let adminRectorCheckApproximateAvailableSeats = async (req, res) => {
 }
 
 module.exports = {
-  adminLoginController,
-  rectorLoginController,
-  adminRectorAddStudentController,
-  adminRectorViewStudentController,
-  adminRectorSearchStudentController,
-  adminRectorCheckHostelController,
-  adminRectorViewRoomController,
+  adminLogin,
+  rectorLogin,
+  adminRectorAddStudent,
+  adminRectorViewStudent,
+  adminRectorSearchStudent,
+  adminRectorCheckHostel,
+  adminRectorViewRoom,
   adminRectorCheckApproximateAvailableSeats
 }
 

@@ -3,7 +3,7 @@ const { verify } = require('jsonwebtoken');
 const { hash } = require('bcrypt');
 const insertDocUtil = require("../util/insertDocUtil");
 
-let adminAddRectorController = async (req, res) => {
+let adminAddRector = async (req, res) => {
   try{
     const { name, email, password } = req.body;
     if(!name || !email || !password) throw new Error("Name, Email and password must be provided!!!")
@@ -31,7 +31,7 @@ let adminAddRectorController = async (req, res) => {
   }
 }
 
-let adminAddHostelController = async (req, res) => {
+let adminAddHostel = async (req, res) => {
   try{
     const { hostelCode } = req.body;
     if(!hostelCode) throw new Error("Hostel code must be provided!!!");
@@ -56,7 +56,7 @@ let adminAddHostelController = async (req, res) => {
   }
 }
 
-let adminAddFloorController = async (req, res) => {
+let adminAddFloor = async (req, res) => {
   try{
     const { floorCode, hostelCode } = req.body;
     if(!floorCode || ! hostelCode) throw new Error("Floor code and Hostel code must be provided!!!");
@@ -86,7 +86,7 @@ let adminAddFloorController = async (req, res) => {
   }
 }
 
-let adminAddRoomController = async (req, res) => {
+let adminAddRoom = async (req, res) => {
   try{
     const { roomCode, floorCode, roomCapacity } = req.body;
     if(!roomCode) throw new Error("Room code, Floor code and Room capacity must be provided!!!");
@@ -117,8 +117,8 @@ let adminAddRoomController = async (req, res) => {
 }
 
 module.exports = {
-  adminAddRectorController,
-  adminAddHostelController,
-  adminAddFloorController,
-  adminAddRoomController
+  adminAddRector,
+  adminAddHostel,
+  adminAddFloor,
+  adminAddRoom
 }
