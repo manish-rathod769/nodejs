@@ -1,0 +1,25 @@
+<!-- Include header -->
+<%- include("partial/mainHeader.ejs") %>
+<!-- /Include header -->
+
+<div class="container mt-5">
+  <form id="user-register-form">
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label text-orange lead fw-bold">Name :</label>
+      <input type="text" class="form-control" name="name" aria-describedby="emailHelp">
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label text-orange lead fw-bold">Email address :</label>
+      <input type="email" class="form-control" name="email" aria-describedby="emailHelp">
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputPassword1" class="form-label text-orange lead fw-bold">Password :</label>
+      <input type="password" class="form-control" name="password">
+    </div>
+    <button type="submit" class="btn btn-lg button bg-orange text-white">Register</button>
+  </form>
+</div>
+
+</body>
+<script src="js/userRegister.js"></script>
+</html>

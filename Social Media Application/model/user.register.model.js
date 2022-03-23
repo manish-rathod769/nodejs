@@ -12,6 +12,9 @@ const userRegisterSchema = mongoose.Schema({
   password: {
     type: 'string',
     required: true
+  },
+  refreshToken: {
+    type: 'string'
   }
 })
 

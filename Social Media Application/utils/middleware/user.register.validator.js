@@ -14,10 +14,10 @@ const userRegisterValidation = async (req, res, next) => {
   };
   const { error } = validation.validate(payload);
   if(error){
-    res.status(406).json({ is_error: true, message: error.message });
+    res.json({ is_error: true, message: error.message });
   }else{
     next();
-  }
+  } 
 }
 
-module.exports = userRegisterValidation;
+module.exports = userRegisterValidation;  
