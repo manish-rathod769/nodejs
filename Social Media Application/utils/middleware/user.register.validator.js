@@ -14,7 +14,8 @@ const userRegisterValidation = async (req, res, next) => {
   };
   const { error } = validation.validate(payload);
   if(error){
-    res.json({ is_error: true, message: error.message });
+    res.render('register', { errorMessage: error.message });
+    // res.json({ is_error: true, message: error.message });
   }else{
     next();
   } 
