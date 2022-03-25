@@ -1,0 +1,38 @@
+<!-- Include header -->
+<%- include("partial/mainHeader.ejs") %>
+<!-- /Include header -->
+
+<div class="container mt-5 d-flex justify-content-between">
+  <div>
+    <a href="/profile" class="btn btn-lg button bg-orange text-white">Profile Post</a>
+    <a href="/all" class="btn btn-lg button bg-orange text-white">All Post</a>
+  </div>
+  <a href="/logout" class="btn btn-lg button bg-orange text-white">Logout</a>
+</div>
+
+<div class="container mt-5 orange-border p-4">
+  <% if(errorMessage) { %>
+    <p class="error fw-bold lead"><%= errorMessage %></p>
+  <% } %>
+  <form action="/add" method="post" id="user-add-post-form" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label text-orange lead">Select Image :</label>
+      <input type="file" class="form-control" name="image" id="image" accept="image/png, image/jpeg, image/jpg">
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label text-orange lead">Title :</label>
+      <input type="text" class="form-control" name="title">
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputPassword1" class="form-label text-orange lead">Description :</label>
+      <input type="text" class="form-control" name="description">
+    </div>
+    <button type="submit" class="btn btn-lg button bg-orange text-white">Post</button>
+  </form>
+</div>
+
+</body>
+
+<script src="js/addPost.js"></script>
+
+</html>
