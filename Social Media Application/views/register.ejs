@@ -2,18 +2,21 @@
 <%- include("partial/mainHeader.ejs") %>
 <!-- /Include header -->
 
-<div class="container mt-5">
-  <form id="user-register-form">
+<div class="container mt-5 orange-border p-4">
+  <% if(errorMessage) { %>
+    <p class="error fw-bold lead mb-4"><%= errorMessage %></p>
+  <% } %>
+  <form action="/register" method="post" id="user-register-form">
     <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label text-orange lead fw-bold">Name :</label>
+      <label for="exampleInputEmail1" class="form-label text-orange lead">Name :</label>
       <input type="text" class="form-control" name="name" aria-describedby="emailHelp">
     </div>
     <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label text-orange lead fw-bold">Email address :</label>
+      <label for="exampleInputEmail1" class="form-label text-orange lead">Email address :</label>
       <input type="email" class="form-control" name="email" aria-describedby="emailHelp">
     </div>
     <div class="mb-3">
-      <label for="exampleInputPassword1" class="form-label text-orange lead fw-bold">Password :</label>
+      <label for="exampleInputPassword1" class="form-label text-orange lead">Password :</label>
       <input type="password" class="form-control" name="password">
     </div>
     <button type="submit" class="btn btn-lg button bg-orange text-white">Register</button>
@@ -22,4 +25,5 @@
 
 </body>
 <script src="js/userRegister.js"></script>
+
 </html>

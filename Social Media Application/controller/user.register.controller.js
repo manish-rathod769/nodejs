@@ -23,7 +23,8 @@ const userRegister = async (req, res) => {
     })
     insertDocument(req, res, userDetails, "User Registration Successfull...");
   }catch(e){
-    res.json({ is_error: true, message: e.message });
+    res.render('register', { errorMessage: e.message });
+    // res.json({ is_error: true, message: e.message });
   }
 }
 
