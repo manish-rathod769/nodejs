@@ -17,7 +17,7 @@ let userUploadImage = async (req, res) => {
 
     const postDetails = new postModel({
       title: req.body.title,
-      image: req.file.path,
+      image: req.file.filename,
       description: req.body.description,
       userID: matchedUser[0]._id,
       time: new Date()
