@@ -20,6 +20,9 @@ const postSchema = mongoose.Schema({
   time: {
     type: Date,
     required: true
+  },
+  likes: {
+    type: [ObjectId]
   }
 })
 
