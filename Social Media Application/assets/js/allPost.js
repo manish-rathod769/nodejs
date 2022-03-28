@@ -16,27 +16,3 @@ let likeDislike = ( pid ) => {
     }
   });
 }
-
-let paginateData = (i) => {
-  const index = Number(i);
-  $.ajax({
-    url: '/all',
-    method: 'get',
-    data: { index }
-  })
-}
-
-let deletePost = (pid) => {
-  $.ajax({
-    url: '/delete',
-    method: 'delete',
-    data: { pid }
-  })
-  .done( (res) => {
-    if(res.isDeleted){
-      window.location.reload();
-    }else{
-      alert(res.error);
-    }
-  })
-}
