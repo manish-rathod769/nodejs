@@ -8,6 +8,7 @@ const userProfilePost = require('../controller/user.profilePost.controller');
 const userAddPost = require('../controller/user.addPost.controller');
 const userLogout = require('../controller/user.logout.controller');
 const userPostLike = require('../controller/user.likePost.controller');
+const userDeletePost = require('../controller/user.deletePost.controller');
 
 const userRegisterValidation = require('../utils/middleware/user.register.validator');
 const userLoginValidation = require('../utils/middleware/user.login.validator');
@@ -30,7 +31,9 @@ route.get('/logout', userAccessTokenValidation, userLogout);
 route.post('/register', userRegisterValidation, userRegister);
 route.post('/login', userLoginValidation, userLogin);
 route.post('/add', upload.single('image'), userAddPostValidation, userAddPost);
-route.post('/like', userAccessTokenValidation, userPostLike)
+route.post('/like', userAccessTokenValidation, userPostLike);
+
+route.delete('/delete', userAccessTokenValidation, userDeletePost);
 // route.get('/login', (req, res) => res.render('login'));
 // route.post('/login', userLoginValidation, userLogin);
 
