@@ -10,6 +10,20 @@
   <a href="/logout" class="btn btn-lg button bg-orange text-white">Logout</a>
 </div>
 
+<div class="container my-5 d-flex justify-content-around orange-border p-3">
+  <% if(paginationDetails.before){ %>
+    <a href="/profile/<%= paginationDetails.current-1 %>" class="btn btn-lg button bg-orange text-white">Previous</a>
+  <% }else{ %>
+    <a class="btn btn-lg button bg-orange text-white disabled">Previous</a>
+  <% } %>
+  <a href="" class="btn btn-lg button bg-orange text-white inactivate"><%= paginationDetails.current %></a>
+  <% if(paginationDetails.after){ %>
+    <a href="/profile/<%= paginationDetails.current+1 %>" class="btn btn-lg button bg-orange text-white">Next</a>
+  <% }else{ %>
+    <a class="btn btn-lg button bg-orange text-white disabled">Next</a>
+  <% } %>
+  </div>
+
 <div class="container my-4">
   <% if(errorMessage) { %>
       <p class="error fw-bold lead"><%= errorMessage %></p>

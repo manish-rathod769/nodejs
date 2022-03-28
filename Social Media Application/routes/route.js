@@ -24,7 +24,7 @@ route.get('/register', (req, res) => res.render('register', {errorMessage: ""}))
 route.get('/login', (req, res) => res.render('login', {errorMessage: ""}));
 route.get('/add', userAccessTokenValidation, (req, res) => res.render('addPost', {errorMessage: ""}));
 route.get('/all/:index?', userAccessTokenValidation, userAllPost);
-route.get('/profile', userAccessTokenValidation, userProfilePost);
+route.get('/profile/:index?', userAccessTokenValidation, userProfilePost);
 route.get('/logout', userAccessTokenValidation, userLogout);
 
 route.post('/register', userRegisterValidation, userRegister);
