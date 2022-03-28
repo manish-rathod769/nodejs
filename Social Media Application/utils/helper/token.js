@@ -18,7 +18,6 @@ let sendAccessToken = (req, res, accessToken) => {
   //   accessToken,
   //   message: "Logged in successfully..."
   // });
-  req.flash('accessToken', accessToken);
   res.redirect('/all');
 }
 
