@@ -27,6 +27,10 @@ i{
   font-size: 14px;
 }
 
+.inactivate{
+  pointer-events: none;
+}
+
 .button{
   border: 1px solid #FFFFFF;
   cursor: pointer;
