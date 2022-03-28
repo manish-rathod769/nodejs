@@ -14,7 +14,7 @@ let userProfilePost = async (req, res) => {
     let isDataAfterPostData = (index*4 <= totalLength) ? await postModel.aggregate([{$match: {userID: ObjectId(userID)}}, {$lookup: { from: 'users', localField: 'userID', foreignField: '_id', as: 'userDetails'}}, {$project: {postBy: '$userDetails.email', _id: 1, title: 1, image: 1, description: 1, userID: 1, time: 1, likes: 1}}, {$unwind: '$postBy'}, {$sort: {_id: -1}}, {$skip: index*4}, {$count: "afterCount"}]) : [{ afterCount: 0 }];
 
     const paginationDetails = { before: isDataBeforePostData[0].beforeCount, after: isDataAfterPostData[0].afterCount, current: index };
-    console.log(paginationDetails);
+    // console.log(paginationDetails);
     postData.forEach( post => {
       let likedUsers = post.likes;
       let flag = likedUsers.some( like => like.toString() === userID.toString());
