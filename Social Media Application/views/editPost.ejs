@@ -1,0 +1,42 @@
+<!-- Include header -->
+<%- include("partial/mainHeader.ejs") %>
+<!-- /Include header -->
+
+<div class="container mt-4 d-flex justify-content-between">
+  <div>
+    <a href="/profile" class="btn btn-lg button bg-orange text-white">Profile Post</a>
+    <a href="/all" class="btn btn-lg button bg-orange text-white">All Post</a>
+    <a href="/add" class="btn btn-lg button bg-orange text-white">Add Post</a>
+  </div>
+  <a href="/logout" class="btn btn-lg button bg-orange text-white">Logout</a>
+</div>
+
+<div class="container mt-5 orange-border p-4">
+  <% if(errorMessage) { %>
+    <p class="error fw-bold lead"><%= errorMessage %></p>
+  <% } %>
+
+  <div class="row">
+    <% if(!postData.length) { %>
+        <h2 class="error fw-bold text-center mt-5 pt-5">Nothing to show !!!</h2>
+    <% }else{ 
+      postData.forEach( post => { %>
+        <form action="/edit/<%= post._id %>" method="post" id="user-edit-post-form">
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label text-orange lead">Title :</label>
+              <input type="text" class="form-control" name="title" aria-describedby="emailHelp" value="<%= post.title %>">
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label text-orange lead">Description :</label>
+              <input type="text" class="form-control" name="description"  value="<%= post.description %>">
+            </div>
+            <button type="submit" class="btn btn-lg button bg-orange text-white">Update</button>
+          </form>
+    <%  })
+      } %>
+    </div>
+</div>
+
+</body>
+<script src="/js/editPost.js"></script>
+</html>

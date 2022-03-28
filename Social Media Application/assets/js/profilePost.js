@@ -17,6 +17,21 @@ let likeDislike = ( pid ) => {
   });
 }
 
+// let editPost = (pid) => {
+//   $.ajax({
+//     url: `/edit/${pid}`,
+//     method: 'put',
+//     data: { pid }
+//   })
+//   .done( (res) => {
+//     if(req.isEdited){
+//       window.location.reload();
+//     }else{
+//       alert(res.error);
+//     }
+//   })
+// }
+
 let deletePost = (pid) => {
   $.ajax({
     url: '/delete',
