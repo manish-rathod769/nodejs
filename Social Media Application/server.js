@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const connectToDB = require('./db/connection');
+const { indexRoute } = require('./controller/users/users.controller');
 
 // Require .env file
 require('dotenv').config();
@@ -24,6 +25,9 @@ app.use('/css', express.static(path.resolve(__dirname, "assets/css")));
 app.use('/js', express.static(path.resolve(__dirname, "assets/js")));
 app.use('/images', express.static(path.resolve(__dirname, "db/Images")));
 
-app.use("/", require("./routes/route"));
+// Requiring Route Files
+app.get("/", indexRoute);
+app.use("/", require("./routes/users.routes"));
+app.use("/", require("./routes/post.routes"));
 
 app.listen(portNum, () => console.log(`Server runnig on http://localhost:${portNum}/`));
