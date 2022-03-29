@@ -2,34 +2,18 @@ const { sign } = require('jsonwebtoken');
 
 let createAccessToken = emailID => {
   return sign( {emailID}, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "15m"
-  });
-}
-
-let createRefreshToken = emailID => {
-  return sign( {emailID}, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: "7d"
+    expiresIn: "1d"
   });
 }
 
 let sendAccessToken = (req, res, accessToken) => {
-  // res.status(200).json({ 
-  //   is_error: false,
-  //   accessToken,
-  //   message: "Logged in successfully..."
-  // });
-  res.redirect('/all');
-}
-
-let sendRefreshToken = (req, res, refreshToken) => {
-  res.cookie("refreshToken", refreshToken, {
+  res.cookie("accessToken", accessToken, {
     httpOnly: true
   });
+  res.redirect('/posts/1');
 }
 
 module.exports = {
   createAccessToken,
-  createRefreshToken,
-  sendAccessToken,
-  sendRefreshToken
+  sendAccessToken
 }
