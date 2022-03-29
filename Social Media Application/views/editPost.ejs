@@ -4,9 +4,9 @@
 
 <div class="container mt-4 d-flex justify-content-between">
   <div>
-    <a href="/profile" class="btn btn-lg button bg-orange text-white">Profile Post</a>
-    <a href="/all" class="btn btn-lg button bg-orange text-white">All Post</a>
-    <a href="/add" class="btn btn-lg button bg-orange text-white">Add Post</a>
+    <a href="/posts/<%= userID %>/1" class="btn btn-lg button bg-orange text-white">Profile Post</a>
+    <a href="/posts/1" class="btn btn-lg button bg-orange text-white">All Post</a>
+    <a href="/post" class="btn btn-lg button bg-orange text-white">Add Post</a>
   </div>
   <a href="/logout" class="btn btn-lg button bg-orange text-white">Logout</a>
 </div>
@@ -21,7 +21,11 @@
         <h2 class="error fw-bold text-center mt-5 pt-5">Nothing to show !!!</h2>
     <% }else{ 
       postData.forEach( post => { %>
-        <form action="/edit/<%= post._id %>" method="post" id="user-edit-post-form">
+        <form action="/post/<%= post._id %>" method="post" id="user-edit-post-form">
+          <!-- <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label text-orange lead">Select Image :</label>
+            <input type="file" class="form-control" name="image" id="image" accept="image/png, image/jpeg, image/jpg">
+          </div> -->
             <div class="mb-3">
               <label for="exampleInputEmail1" class="form-label text-orange lead">Title :</label>
               <input type="text" class="form-control" name="title" aria-describedby="emailHelp" value="<%= post.title %>">
@@ -38,5 +42,5 @@
 </div>
 
 </body>
-<script src="/js/editPost.js"></script>
+<script src="/js/posts.js"></script>
 </html>

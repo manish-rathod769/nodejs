@@ -4,21 +4,21 @@
 
 <div class="container mt-4 d-flex justify-content-between">
   <div>
-    <a href="/all" class="btn btn-lg button bg-orange text-white">All Post</a>
-    <a href="/add" class="btn btn-lg button bg-orange text-white">Add Post</a>
+    <a href="/posts/1" class="btn btn-lg button bg-orange text-white">All Post</a>
+    <a href="/post" class="btn btn-lg button bg-orange text-white">Add Post</a>
   </div>
   <a href="/logout" class="btn btn-lg button bg-orange text-white">Logout</a>
 </div>
 
 <div class="container my-5 d-flex justify-content-around orange-border p-3">
   <% if(paginationDetails.before){ %>
-    <a href="/profile/<%= paginationDetails.current-1 %>" class="btn btn-lg button bg-orange text-white">Previous</a>
+    <a href="/posts/<%= userID %>/<%= paginationDetails.current-1 %>" class="btn btn-lg button bg-orange text-white">Previous</a>
   <% }else{ %>
     <a class="btn btn-lg button bg-orange text-white disabled">Previous</a>
   <% } %>
   <a href="" class="btn btn-lg button bg-orange text-white inactivate"><%= paginationDetails.current %></a>
   <% if(paginationDetails.after){ %>
-    <a href="/profile/<%= paginationDetails.current+1 %>" class="btn btn-lg button bg-orange text-white">Next</a>
+    <a href="/posts/<%= userID %>/<%= paginationDetails.current+1 %>" class="btn btn-lg button bg-orange text-white">Next</a>
   <% }else{ %>
     <a class="btn btn-lg button bg-orange text-white disabled">Next</a>
   <% } %>
@@ -36,7 +36,7 @@
         <div class="flex-box">
           <div class="mt-3 bg-warnin d-flex align-items-center orange-border round-border p-2">
             <img style="background-image: url(/images/<%= post.image %>)" class="round-border">
-            <div class="m-2">
+            <div class="m-2 position-relative">
               <p class="fs-3"><%= post.title  %></p>
               <p><%= post.description  %></p>
               <div>
@@ -49,11 +49,10 @@
                   <p class="text-sm" id="<%= post._id %>_count">&nbsp;<%= post.likes.length %></p>
                 </div>
               </div>
-              <p class="text-sm text-secondary">Created on: <%= post.time.getDate() %>/<%= post.time.getMonth()+1 %>/<%= post.time.getFullYear() %></p>
-              <div class="d-flex justify-content-end">
-                <!-- <a class="text-decoration-none orange-border round-border edit-post" onclick="editPost('<%= post._id %>')"><i class="fa-solid fa-pencil fs-6 text-orange p-2" data-id="<%= post._id %>"></i></a>&nbsp;&nbsp; -->
-                <a href="/edit/<%= post._id %>" class="text-decoration-none orange-border round-border edit-post"><i class="fa-solid fa-pencil fs-6 text-orange p-2" data-id="<%= post._id %>"></i></a>&nbsp;&nbsp;
-                <a class="text-decoration-none orange-border round-border delete-post" onclick="deletePost('<%= post._id %>')"><i class="fa-solid fa-trash-can fs-6 text-orange p-2" data-id="<%= post._id %>"></i></a>
+              <p class="text-sm text-secondary">Last updated on: <%= post.time.getDate() %>/<%= post.time.getMonth()+1 %>/<%= post.time.getFullYear() %></p>
+              <div class="position-absolute">
+                <a href="/post/<%= post._id %>" class="text-decoration-none orange-border round-border edit-post p-2"><i class="fa-solid fa-pencil fs-6 text-orange" data-id="<%= post._id %>"></i></a>&nbsp;&nbsp;
+                <a class="text-decoration-none orange-border round-border delete-post p-2" onclick="deletePost('<%= post._id %>')"><i class="fa-solid fa-trash-can fs-6 text-orange" data-id="<%= post._id %>"></i></a>
               </div>
             </div>
           </div>
@@ -64,5 +63,5 @@
 </div>
 
 </body>
-<script src="/js/profilePost.js"></script>
+<script src="/js/posts.js"></script>
 </html>

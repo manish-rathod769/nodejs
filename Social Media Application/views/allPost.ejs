@@ -4,23 +4,23 @@
 
 <div class="container mt-4 d-flex justify-content-between">
   <div>
-    <a href="/profile" class="btn btn-lg button bg-orange text-white">Profile Post</a>
-    <a href="/add" class="btn btn-lg button bg-orange text-white">Add Post</a>
+    <a href="/posts/<%= userID %>/1" class="btn btn-lg button bg-orange text-white">Profile Post</a>
+    <a href="/post" class="btn btn-lg button bg-orange text-white">Add Post</a>
   </div>
   <a href="/logout" class="btn btn-lg button bg-orange text-white">Logout</a>
 </div>
 
 <%
 let displayPagination = (paginationDetails) => { %>
-  <div class="container my-5 d-flex justify-content-around orange-border p-3">
+  <div class="container my-4 d-flex justify-content-around orange-border p-3">
     <% if(paginationDetails.before){ %>
-      <a href="/all/<%= paginationDetails.current-1 %>" class="btn btn-lg button bg-orange text-white">Previous</a>
+      <a href="/posts/<%= paginationDetails.current-1 %>" class="btn btn-lg button bg-orange text-white">Previous</a>
     <% }else{ %>
       <a class="btn btn-lg button bg-orange text-white disabled">Previous</a>
     <% } %>
     <a href="" class="btn btn-lg button bg-orange text-white inactivate" id="index"><%= paginationDetails.current %></a>
     <% if(paginationDetails.after){ %>
-      <a href="/all/<%= paginationDetails.current+1 %>" class="btn btn-lg button bg-orange text-white">Next</a>
+      <a href="/posts/<%= paginationDetails.current+1 %>" class="btn btn-lg button bg-orange text-white">Next</a>
     <% }else{ %>
       <a class="btn btn-lg button bg-orange text-white disabled">Next</a>
     <% } %>
@@ -55,7 +55,7 @@ let displayPagination = (paginationDetails) => { %>
                   <p class="text-sm" id="<%= post._id %>_count">&nbsp;<%= post.likes.length %></p>
               </div>
               <p class="text-sm text-secondary">Post by: <%= post.postBy  %></p>
-              <p class="text-sm text-secondary">Created on: <%= post.time.getDate() %>/<%= post.time.getMonth()+1 %>/<%= post.time.getFullYear() %></p>
+              <p class="text-sm text-secondary">Last updated on: <%= post.time.getDate() %>/<%= post.time.getMonth()+1 %>/<%= post.time.getFullYear() %></p>
             </div>
           </div>
         </div>
@@ -69,5 +69,5 @@ let displayPagination = (paginationDetails) => { %>
 
 
 </body>
-<script src="/js/allPost.js"></script>
+<script src="/js/posts.js"></script>
 </html>
