@@ -1,7 +1,14 @@
-const { rectorModel, adminModel, hostelModel, floorModel, roomModel } = require("../model/models");
 const { verify } = require('jsonwebtoken');
 const { hash } = require('bcrypt');
-const insertDocUtil = require("../util/insertDocUtil");
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
+
+const { rectorModel, adminModel } = require('../model/admin/admin.rector.model');
+const hostelModel = require('../model/admin/hostel.model.js');
+const floorModel = require('../model/admin/floor.model.js');
+const roomModel = require('../model/admin/room.model');
+
+const insertDocUtil = require("../helper/insertDocUtil");
 
 let adminAddRector = async (req, res) => {
   try{
@@ -13,7 +20,7 @@ let adminAddRector = async (req, res) => {
       name,
       email,
       password: encryptedPassword,
-      refreshToken: ""
+      accessToken: ""
     });
 
     await rectorModel.find()
@@ -25,9 +32,7 @@ let adminAddRector = async (req, res) => {
 
     insertDocUtil(req, res, rectorDetails, "Rector Details Added Successfully...");    
   }catch(e){
-    res.setHeader('Content-Type', 'application/json');
     res.status(404).json({ error: e.message });
-    res.end();
   }
 }
 
@@ -58,56 +63,43 @@ let adminAddHostel = async (req, res) => {
 
 let adminAddFloor = async (req, res) => {
   try{
-    const { floorCode, hostelCode } = req.body;
-    if(!floorCode || ! hostelCode) throw new Error("Floor code and Hostel code must be provided!!!");
-
+    let { floorCode, hostelID } = req.body;
+    if(!floorCode || ! hostelID ) throw new Error("Floor code and HostelID must be provided!!!");
+    hostelID = ObjectId(hostelID);
     const floorDetails = new floorModel({
       floorCode,
-      hostelCode
+      hostelID
     });
     
-    await floorModel.find()
-    .then( floors => {
-      floors.forEach(floor => {
-        if(floor.floorCode === Number(floorCode)) throw new Error("Floor code already exist!!!");
-      });
-    });
-    await hostelModel.find()
-    .then( hostels => {
-      let flag = hostels.some(hostel => hostel.hostelCode === Number(hostelCode));
-      if(!flag) throw new Error("Hostel code does not found in Database!!!");
-    });
+    const matchedFloor = await floorModel.find({floorCode, hostelID});
+    if(matchedFloor.length) throw new Error("Data already exists in Database!!!"); 
+    
+    const matchedHostel = await hostelModel.find({_id: hostelID});
+    if(!matchedHostel.length) throw new Error("HostelID does not found in Database!!!");
 
     insertDocUtil(req, res, floorDetails, "Floor Details Added Successfully...");
   }catch(e){
-    res.setHeader('Content-Type', 'application/json');
     res.status(404).json({ error: e.message });
-    res.end();
   }
 }
 
 let adminAddRoom = async (req, res) => {
   try{
-    const { roomCode, floorCode, roomCapacity } = req.body;
-    if(!roomCode) throw new Error("Room code, Floor code and Room capacity must be provided!!!");
-
+    let { roomCode, floorID, roomCapacity } = req.body;
+    if(!roomCode || !floorID || !roomCapacity ) throw new Error("Room code, Floor code and Room capacity must be provided!!!");
+    floorID = ObjectId(floorID);
     const roomDetails = new roomModel({
       roomCode,
-      floorCode,
+      floorID,
       roomCapacity
     });
 
-    await roomModel.find()
-    .then( rooms => {
-      rooms.forEach(room => {
-        if(room.roomCode === Number(roomCode)) throw new Error("Room code already exist!!!");
-      });
-    });
-    await floorModel.find()
-    .then( floors => {
-      let flag = floors.some(floor => floor.floorCode === Number(floorCode));
-      if(!flag) throw new Error("Floor code does not found in Database!!!");
-    });
+    const matchedRoom = await roomModel.find({roomCode, floorID});
+    if(matchedRoom.length) throw new Error("Data already exists in Database!!!"); 
+    
+    const matchedFloor = await floorModel.find({_id: floorID});
+    if(!matchedFloor.length) throw new Error("FloorID does not found in Database!!!");
+
     insertDocUtil(req, res, roomDetails, "Room Details Added Successfully...");
   }catch(e){
     res.setHeader('Content-Type', 'application/json');
