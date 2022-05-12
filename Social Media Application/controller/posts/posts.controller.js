@@ -72,7 +72,7 @@ const addPost = async (req, res) => {
       res.redirect(`/posts/${userID}/1`);
     });
   }catch(e){
-    res.render('addPost', { errorMessage: e.message });
+    res.render('addPost', { errorMessage: e.message, userID });
   }
 }
 
@@ -80,8 +80,9 @@ const likePost = async (req, res) => {
   const userID = await getUserID(req, res);
   const postID = req.body.pid;
   // let matchedPost = {};
-  const matchedPost = await postModel.find({_id: postID});
-
+  const matchedPost = await postModel.find({_id: postID}).populate("users");
+  console.log(matchedPost[0].users);
+  // res.json(matchedPost);
   if(!matchedPost.length) throw new Error("Post does not exist !!!");
   const isAlreadyLiked = await postModel.find({ _id: postID, likes: {$in: [userID]}});
   
@@ -109,7 +110,6 @@ const editPost = async(req, res) => {
     // if(!matchedPost_[0]) throw new Error('Data does not exist !!!');
     // const filePath = path.resolve(__dirname, '../../db/Images/');
     // await fs.promises.unlink(`${filePath}/${matchedPost_[0].image}`);
-    
     const matchedPost = await postModel.aggregate([{$match: {_id: postID, userID}}])
     if(!matchedPost[0]) throw new Error('Data does not exist !!!');
     await postModel.findByIdAndUpdate({_id: postID}, {title, description, time});
@@ -137,6 +137,7 @@ const deletePost = async (req, res) => {
 
 const renderToAddPost = async (req, res) => {
   const userID = await getUserID(req, res);
+  console.log(userID);
   try {
     res.render('addPost', { errorMessage: "", userID});
   }catch(e){

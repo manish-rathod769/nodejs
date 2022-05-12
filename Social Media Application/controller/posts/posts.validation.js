@@ -34,8 +34,8 @@ const isUserEditPostExist = async (req, res) => {
 }
 
 const addValidation = joi.object({
-  title: joi.string().min(3).trim().required(),
-  description: joi.string().min(10).trim().required()
+  title: joi.string().trim().required(),
+  description: joi.string().trim().required()
 });
 
 const addPostValidation = async (req, res, next) => {
