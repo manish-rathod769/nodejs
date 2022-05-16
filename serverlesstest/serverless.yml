@@ -1,0 +1,37 @@
+service: serverlesstest
+
+plugins:
+  - serverless-offline
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+
+functions:
+  default:
+    handler: src/api/default.handler
+    events:
+      - http:
+          path: /
+          method: get
+  hello:
+    handler: src/api/hello.handler
+    events:
+      - http:
+          path: /hello
+          method: get
+  greetings:
+    handler: src/api/greetings.handler
+    events:
+      - http:
+          path: /greetings
+          method: get
+  bye:
+    handler: src/api/bye.handler
+    events:
+      - http:
+          path: /bye
+          method: get
