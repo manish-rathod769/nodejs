@@ -1,3 +1,5 @@
+org: manishrathod769
+app: serverlesstest
 service: serverlesstest
 
 plugins:
@@ -8,7 +10,9 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs12.x
-
+  profile: Manish Rathod
+  region: us-east-1
+  stage: dev
 
 functions:
   default:
