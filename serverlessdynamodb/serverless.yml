@@ -3,13 +3,16 @@ app: slsdynamodb
 service: serverlessdynamodb
 frameworkVersion: '3'
 
+plugins:
+  - serverless-offline
+
 custom:
   tableName: 'users-table-${self:service}-${sls:stage}'
 
 provider:
   name: aws
   runtime: nodejs14.x
-  profile: Manish Rathod
+  profile: manish_rathod
   region: us-east-1
   stage: dev
   iam:
