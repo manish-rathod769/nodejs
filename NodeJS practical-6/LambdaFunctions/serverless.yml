@@ -1,0 +1,51 @@
+org: manishrathod769
+app: lambda-assignment
+service: LambdaFunctions
+frameworkVersion: '3'
+
+custom:
+  tableName: 'users-table-${sls:stage}'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - Fn::GetAtt: [ UsersTable, Arn ]
+  environment:
+    USERS_TABLE: ${self:custom.tableName}
+
+plugins:
+  - serverless-offline
+
+functions:
+  readFile:
+    handler: src/api/handler.fetchData
+    events:
+      - http:
+          path: /
+          method: get
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:custom.tableName}

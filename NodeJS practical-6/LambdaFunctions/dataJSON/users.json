@@ -1,0 +1,147 @@
+[
+    {
+        "ID": 1,
+        "fullName": "Radhika Thakkar",
+        "emailID": "radhika.kanabar@bacancy.com",
+        "designation": "Software Engineer",
+        "department": "NodeJS",
+        "technologiesKnown": [
+            "NodeJS",
+            "Javascript",
+            "MongoDB",
+            "GraphQL",
+            "MeteorJS"
+        ],
+        "projects": [
+            1,
+            2,
+            5
+        ]
+    },
+    {
+        "ID": 2,
+        "fullName": "Krushit Dudhat",
+        "emailID": "krushit.dudhat@bacancy.com",
+        "designation": "Trainee",
+        "department": "NodeJS",
+        "technologiesKnown": [
+            "NodeJS",
+            "Javascript"
+        ],
+        "projects": [
+            1,
+            3
+        ]
+    },
+    {
+        "ID": 3,
+        "fullName": "vinayak chavan",
+        "emailID": "vinayak.chavan@bacancy.com",
+        "designation": "Trainee",
+        "department": "NodeJS",
+        "technologiesKnown": [
+            "NodeJS",
+            "Javascript"
+        ],
+        "projects": [
+            1,
+            2
+        ]
+    },
+    {
+        "ID": 4,
+        "fullName": "Apexa Patel",
+        "emailID": "apexa.patel@bacancy.com",
+        "designation": "Trainee",
+        "department": "NodeJS",
+        "technologiesKnown": [
+            "NodeJS",
+            "Javascript"
+        ],
+        "projects": [
+            1,
+            5      
+        ]
+    },
+    {
+        "ID": 5,
+        "fullName": "Manish Rathod",
+        "emailID": "manish.rathod@bacancy.com",
+        "designation": "Trainee",
+        "department": "NodeJS",
+        "technologiesKnown": [
+            "NodeJS",
+            "MongoDB"
+        ],
+        "projects": [
+            2,
+            3
+        ]
+    },
+    {
+        "ID": 6,
+        "fullName": "JInay Shah",
+        "emailID": "jinay.shah@bacancy.com",
+        "designation": "Trainee",
+        "department": "NodeJS",
+        "technologiesKnown": [
+            "NodeJS",
+            "JavaScript",
+            "JAVA",
+            "MYSql"
+        ],
+        "projects": [
+            2,
+            4
+        ]
+    },  
+    {
+        "ID": 7,
+        "fullName": "Jaykumar Bhatt",
+        "emailID": "jaykumar.bhatt@bacancy.com",
+        "designation": "Trainee",
+        "department": "NodeJS",
+        "technologiesKnown": [
+            "NodeJS",
+            "Javascript",
+            "MySql",
+            "C/C++"
+        ],
+        "projects": [
+            1,
+            2,
+            5
+        ]
+    },
+    {
+        "ID": 8,
+        "fullName": "Lav Panchal",
+        "emailID": "lav.panchal@bacancy.com",
+        "designation": "Trainee",
+        "department": "NodeJS",
+        "technologiesKnown": [
+            "NodeJS",
+            "Javascript"
+        ],
+        "projects": [
+      	    1,
+	        2,
+	        3
+        ]
+    },
+    {
+        "ID": 9,
+        "fullName": "Kirtan Gadhiya",
+        "emailID": "kirtan.gadhiya@bacancy.com",
+        "designation": "Trainee",
+        "department": "NodeJS",
+        "technologiesKnown": [
+            "NodeJS",
+            "Javascript"
+        ],
+        "projects": [
+	          2,
+	          4
+        ]
+    }
+]
