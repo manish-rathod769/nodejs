@@ -1,0 +1,17 @@
+org: manishrathod769
+app: crud-operation
+service: CRUD-Operation
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+
+plugins:
+  - serverless-offline
+
+functions:
+  api:
+    handler: src/api/app.handler
+    events:
+      - httpApi: '*'
