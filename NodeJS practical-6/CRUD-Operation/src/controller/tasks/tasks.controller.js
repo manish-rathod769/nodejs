@@ -1,6 +1,7 @@
 const path = require('path');
 const { readFile, writeFile, isEmptyFile } = require('../../utils/file.operations');
 const { successResponse, errorResponse } = require('../../utils/responses');
+const { nonExistProjects } = require('../../utils/check.existance');
 
 const taskFilePath = path.join(__dirname, '../../../dataJSON/tasks.json');
 
@@ -60,6 +61,12 @@ exports.addTask = async (req, res) => {
       return errorResponse(req, res, 'All parameter must be defined !!!', 500);
     }
 
+    // Check all project exist or not
+    const invalidProject = await nonExistProjects(Array(1).fill(projectID));
+    if (invalidProject.length) {
+      return errorResponse(req, res, { message: `Projects ${invalidProject} does not exist !!!` }, 412);
+    }
+
     const payload = {
       ID: data[data.length - 1].ID + 1,
       title,
@@ -92,6 +99,14 @@ exports.updateTask = async (req, res) => {
     if (singleTaskIndex < 0) {
       const message = { message: 'Data does not exist...' };
       return successResponse(req, res, message, 200);
+    }
+
+    // Check if project IDs exist or not
+    if (Object.keys(data[singleTaskIndex]).includes('projectID')) {
+      const invalidProject = await nonExistProjects(Array(1).fill(req.body.projectID));
+      if (invalidProject.length) {
+        return errorResponse(req, res, { message: `Projects ${invalidProject} does not exist !!!` }, 412);
+      }
     }
 
     Object.keys(req.body).forEach((prop) => {

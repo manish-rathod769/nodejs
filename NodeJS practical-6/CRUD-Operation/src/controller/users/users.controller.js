@@ -1,6 +1,7 @@
 const path = require('path');
 const { readFile, writeFile, isEmptyFile } = require('../../utils/file.operations');
 const { successResponse, errorResponse } = require('../../utils/responses');
+const { nonExistProjects } = require('../../utils/check.existance');
 
 const userFilePath = path.join(__dirname, '../../../dataJSON/users.json');
 
@@ -58,8 +59,14 @@ exports.addUser = async (req, res) => {
       data = [];
     }
 
-    if (!fullName || !emailID || !designation || !department || !technologiesKnown || !projects || typeof technologiesKnown !== 'object' || typeof projects !== 'object') {
-      return errorResponse(req, res, 'All parameter must be defined or projects or technologiesKnown must be in form of array !!!', 500);
+    if (!fullName || !emailID || !designation || !department || !technologiesKnown || !projects) {
+      return errorResponse(req, res, 'All parameter must be defined !!!', 500);
+    }
+
+    // Check all project exist or not
+    const invalidProject = await nonExistProjects(projects);
+    if (invalidProject.length) {
+      return errorResponse(req, res, { message: `Projects ${invalidProject} does not exist !!!` }, 412);
     }
 
     const payload = {
@@ -98,6 +105,14 @@ exports.updateUser = async (req, res) => {
     if (singleUserIndex < 0) {
       const message = { message: 'Data does not exist...' };
       return successResponse(req, res, message, 200);
+    }
+
+    // Check if project IDs exist or not
+    if (Object.keys(data[singleUserIndex]).includes('projects')) {
+      const invalidProject = await nonExistProjects(req.body.projects);
+      if (invalidProject.length) {
+        return errorResponse(req, res, { message: `Projects ${invalidProject} does not exist !!!` }, 412);
+      }
     }
 
     Object.keys(req.body).forEach((prop) => {

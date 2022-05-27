@@ -5,8 +5,9 @@ const userAddObject = joi.object({
   fullName: joi.string().trim(true).required(),
   emailID: joi.string().trim(true).required(),
   designation: joi.string().trim(true).required(),
-  technologiesKnown: joi.array().items(joi.string()).required(),
-  projects: joi.array().items(joi.number()).unique().required(),
+  technologiesKnown: joi.array().items(joi.string()).min(1).required(),
+  projects: joi.array().items(joi.number()).unique().min(1)
+    .required(),
 });
 
 exports.userAddValidation = async (req, res, next) => {
@@ -20,7 +21,7 @@ exports.userAddValidation = async (req, res, next) => {
 
   const { error } = userAddObject.validate(payload);
   if (error) {
-    return errorResponse(req, res, error.message, 206, error.details);
+    return errorResponse(req, res, error.message, 406, error.details);
   }
   return next();
 };
