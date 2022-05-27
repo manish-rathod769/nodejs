@@ -6,6 +6,7 @@
     "body-parser": "^1.20.0",
     "express": "^4.17.1",
     "joi": "^17.6.0",
+    "lodash.difference": "^4.5.0",
     "serverless-http": "^2.7.0",
     "serverless-offline": "^8.8.0"
   },
