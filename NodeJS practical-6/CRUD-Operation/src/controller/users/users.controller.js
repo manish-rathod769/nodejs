@@ -1,5 +1,5 @@
 const path = require('path');
-const { readFile, writeFile, isEmptyFile } = require('../../utils/readFile.utils');
+const { readFile, writeFile, isEmptyFile } = require('../../utils/file.operations');
 const { successResponse, errorResponse } = require('../../utils/responses');
 
 const userFilePath = path.join(__dirname, '../../../dataJSON/users.json');
