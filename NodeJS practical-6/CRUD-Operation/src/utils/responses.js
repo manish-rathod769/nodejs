@@ -1,19 +1,15 @@
-exports.successResponse = (req, res, data, code = 200) => res.send({
-  code,
-  data,
-  success: true,
+// exports.successResponse = (req, res, data, code = 200) => res.send({
+//   code,
+//   data,
+//   success: true,
+// });
+
+exports.successResponse = (data, code = 200) => ({
+  statusCode: code,
+  body: JSON.stringify({ data }),
 });
 
-exports.errorResponse = (
-  req,
-  res,
-  errorMessage = 'Something went wrong',
-  code = 500,
-  error = {},
-) => res.status(code).json({
-  code,
-  errorMessage,
-  error,
-  data: null,
-  success: false,
+exports.errorResponse = (errorMessage, code) => ({
+  statusCode: code,
+  body: JSON.stringify({ error: errorMessage }),
 });

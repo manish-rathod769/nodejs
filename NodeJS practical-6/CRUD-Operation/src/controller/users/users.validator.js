@@ -3,25 +3,27 @@ const { errorResponse } = require('../../utils/responses');
 
 const userAddObject = joi.object({
   fullName: joi.string().trim(true).required(),
-  emailID: joi.string().trim(true).required(),
+  emailID: joi.email().trim(true).required(),
   designation: joi.string().trim(true).required(),
   technologiesKnown: joi.array().items(joi.string()).min(1).required(),
   projects: joi.array().items(joi.number()).unique().min(1)
     .required(),
 });
 
-exports.userAddValidation = async (req, res, next) => {
+// eslint-disable-next-line consistent-return
+exports.userAddValidation = async (event) => {
+  const eventBody = JSON.parse(event.body);
+
   const payload = {
-    fullName: req.body.fullName,
-    emailID: req.body.emailID,
-    designation: req.body.designation,
-    technologiesKnown: req.body.technologiesKnown,
-    projects: req.body.projects,
+    fullName: eventBody.fullName,
+    emailID: eventBody.emailID,
+    designation: eventBody.designation,
+    technologiesKnown: eventBody.technologiesKnown,
+    projects: eventBody.projects,
   };
 
   const { error } = userAddObject.validate(payload);
   if (error) {
-    return errorResponse(req, res, error.message, 406, error.details);
+    return errorResponse(error.message, 406, error.details);
   }
-  return next();
 };

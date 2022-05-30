@@ -9,9 +9,82 @@ provider:
 
 plugins:
   - serverless-offline
+  - serverless-middleware
 
 functions:
-  api:
-    handler: src/api/app.handler
+  getAllUser:
+    handler: src/controller/users/users.controller.getAllUser
     events:
-      - httpApi: '*'
+      - httpApi:
+          path: /users
+          method: get
+
+  getOneUser:
+    handler: src/controller/users/users.controller.getUser
+    events:
+      - httpApi:
+          path: /users/{userId}
+          method: get
+
+  addUser:
+    handler: src/controller/users/users.controller.addUser
+    events:
+      - httpApi:
+          path: /users
+          method: post
+    middleware:
+      pre:
+        - src/controller/users/users.validator.userAddValidation
+
+  updateUser:
+    handler: src/controller/users/users.controller.updateUser
+    events:
+      - httpApi:
+          path: /users/{userId}
+          method: put
+
+  deleteUser:
+    handler: src/controller/users/users.controller.deleteUser
+    events:
+      - httpApi:
+          path: /users/{userId}
+          method: delete
+
+# Projects Start Here
+  getAllProject:
+    handler: src/controller/projects/projects.controller.getAllProject
+    events:
+      - httpApi:
+          path: /pojects
+          method: get
+
+  getOneProject:
+    handler: src/controller/projects/projects.controller.getProject
+    events:
+      - httpApi:
+          path: /projects/{projectId}
+          method: get
+
+  addProject:
+    handler: src/controller/projects/projects.controller.addProject
+    events:
+      - httpApi:
+          path: /projects
+          method: post
+    middleware:
+      pre:
+        - src/controller/projects/projects.validator.projectAddValidation
+
+  updateProject:
+    handler: src/controller/projects/projects.controller.updateProject
+    events:
+      - httpApi:
+          path: /projects/{projectId}
+          method: put
+
+  deleteProject:
+    handler: src/controller/projects/projects.controller.deleteProject
+    events:
+      - httpApi:
+          path: /projects/{projectId}
+          method: delete
