@@ -55,7 +55,7 @@ functions:
     handler: src/controller/projects/projects.controller.getAllProject
     events:
       - httpApi:
-          path: /pojects
+          path: /projects
           method: get
 
   getOneProject:

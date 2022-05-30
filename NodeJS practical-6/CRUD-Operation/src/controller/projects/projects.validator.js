@@ -6,15 +6,16 @@ const projectAddObject = joi.object({
   description: joi.string().trim(true).required(),
 });
 
-exports.projectAddValidation = async (req, res, next) => {
+// eslint-disable-next-line consistent-return
+exports.projectAddValidation = async (event) => {
+  const eventBody = JSON.parse(event.body);
   const payload = {
-    title: req.body.title,
-    description: req.body.description,
+    title: eventBody.title,
+    description: eventBody.description,
   };
 
   const { error } = projectAddObject.validate(payload);
   if (error) {
-    return errorResponse(req, res, error.message, 206, error.details);
+    return errorResponse(error.message, 206, error.details);
   }
-  return next();
 };
