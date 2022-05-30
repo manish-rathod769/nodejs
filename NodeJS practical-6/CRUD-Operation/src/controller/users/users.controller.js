@@ -12,7 +12,7 @@ exports.getAllUser = async () => {
     // Check if file is emty or not
     if (isEmptyFile(data)) {
       const message = { message: 'Empty data...' };
-      return successResponse(message, 200);
+      return successResponse(message, 204);
     }
 
     return successResponse(data, 200);
@@ -30,7 +30,7 @@ exports.getUser = async (event) => {
     // Check if file is emty or not
     if (isEmptyFile(data)) {
       const message = { message: 'Empty data...' };
-      return successResponse(message, 200);
+      return successResponse(message, 204);
     }
 
     const singleUserIndex = data.findIndex((ele) => ele.ID === Number(userId));
@@ -38,7 +38,7 @@ exports.getUser = async (event) => {
     // Check if user with ID exist or not
     if (singleUserIndex < 0) {
       const message = { message: 'Data does not exist...' };
-      return successResponse(message, 200);
+      return successResponse(message, 204);
     }
 
     return successResponse(data[singleUserIndex], 200);
@@ -99,7 +99,7 @@ exports.updateUser = async (event) => {
     // Check if data present in file or not
     if (!data || !data.length) {
       const message = { message: 'Empty data...' };
-      return successResponse(message, 200);
+      return successResponse(message, 204);
     }
 
     const singleUserIndex = data.findIndex((ele) => ele.ID === Number(userId));
@@ -107,7 +107,7 @@ exports.updateUser = async (event) => {
     // Check if user with ID exist or not
     if (singleUserIndex < 0) {
       const message = { message: 'Data does not exist...' };
-      return successResponse(message, 200);
+      return successResponse(message, 204);
     }
 
     // Check if project IDs exist or not
@@ -147,7 +147,7 @@ exports.deleteUser = async (event) => {
     // Check if user with ID exist or not
     if (singleUserIndex < 0) {
       const message = { message: 'Data does not exist...' };
-      return successResponse(message, 200);
+      return successResponse(message, 204);
     }
 
     const updatedData = data.filter((user) => user.ID !== Number(userId));
