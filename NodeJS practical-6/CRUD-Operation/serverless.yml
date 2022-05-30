@@ -88,3 +88,42 @@ functions:
       - httpApi:
           path: /projects/{projectId}
           method: delete
+
+# Tasks Start Here
+  getAllTask:
+    handler: src/controller/tasks/tasks.controller.getAllTask
+    events:
+      - httpApi:
+          path: /tasks
+          method: get
+
+  getOneTask:
+    handler: src/controller/tasks/tasks.controller.getTask
+    events:
+      - httpApi:
+          path: /tasks/{taskId}
+          method: get
+
+  addTask:
+    handler: src/controller/tasks/tasks.controller.addTask
+    events:
+      - httpApi:
+          path: /tasks
+          method: post
+    middleware:
+      pre:
+        - src/controller/tasks/tasks.validator.projectAddValidation
+
+  updateTask:
+    handler: src/controller/tasks/tasks.controller.updateTask
+    events:
+      - httpApi:
+          path: /tasks/{taskId}
+          method: put
+
+  deleteTask:
+    handler: src/controller/tasks/tasks.controller.deleteTask
+    events:
+      - httpApi:
+          path: /tasks/{taskId}
+          method: delete

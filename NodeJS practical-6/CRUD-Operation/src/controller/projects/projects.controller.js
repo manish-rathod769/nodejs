@@ -11,7 +11,7 @@ exports.getAllProject = async () => {
     // Check if file is emty or not
     if (isEmptyFile(data)) {
       const message = { message: 'Empty data...' };
-      return successResponse(message, 204);
+      return successResponse(message, 200);
     }
 
     return successResponse(data, 200);
@@ -28,7 +28,7 @@ exports.getProject = async (event) => {
     // Check if file is emty or not
     if (isEmptyFile(data)) {
       const message = { message: 'Empty data...' };
-      return successResponse(message, 204);
+      return successResponse(message, 200);
     }
 
     const singleProjectIndex = data.findIndex((ele) => ele.ID === Number(projectId));
@@ -36,7 +36,7 @@ exports.getProject = async (event) => {
     // Check if project with ID exist or not
     if (singleProjectIndex < 0) {
       const message = { message: 'Projects does not exist...' };
-      return successResponse(message, 204);
+      return successResponse(message, 200);
     }
 
     return successResponse(data[singleProjectIndex], 200);
@@ -91,7 +91,7 @@ exports.updateProject = async (event) => {
     // Check if project with ID exist or not
     if (singleProjectIndex < 0) {
       const message = { message: 'Projects does not exist...' };
-      return successResponse(message, 204);
+      return successResponse(message, 200);
     }
 
     Object.keys(eventBody).forEach((prop) => {
@@ -123,7 +123,7 @@ exports.deleteProject = async (event) => {
     // Check if project with ID exist or not
     if (singleProjectIndex < 0) {
       const message = { message: 'Projects does not exist...' };
-      return successResponse(message, 204);
+      return successResponse(message, 200);
     }
 
     const updatedData = data.filter((project) => project.ID !== Number(projectId));
