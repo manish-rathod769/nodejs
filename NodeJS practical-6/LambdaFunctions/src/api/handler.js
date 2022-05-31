@@ -7,19 +7,13 @@ const userFilePath = path.join(__dirname, '../../dataJSON/users.json');
 const taskFilePath = path.join(__dirname, '../../dataJSON/tasks.json');
 
 exports.fetchData = async () => {
-  try {
-    // Read JSON data one after another
-    const usersData = await readFile(userFilePath);
-    const projectsData = await readFile(projectFilePath);
-    const tasksData = await readFile(taskFilePath);
-    return displayOP(usersData, projectsData, tasksData);
-  } catch (error) {
-    return {
+  Promise.all([readFile(userFilePath), readFile(projectFilePath), readFile(taskFilePath)])
+    .then((data) => displayOP(data[0], data[1], data[2]))
+    .catch((error) => ({
       statusCode: 500,
       body: JSON.stringify({
         success: false,
         message: error.message,
       }),
-    };
-  }
+    }));
 };

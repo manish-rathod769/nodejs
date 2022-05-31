@@ -36,12 +36,6 @@ exports.displayOP = (usersJSON, projectsJSON, tasksJSON) => {
     singleUser.projects = fetchTasks(userProjects, tasksJSON);
     result.push(singleUser);
   });
-  // return result;
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      success: true,
-      data: result,
-    }),
-  };
+  console.dir(result, { depth: 6 });
+  return result;
 };
