@@ -112,7 +112,7 @@ functions:
           method: post
     middleware:
       pre:
-        - src/controller/tasks/tasks.validator.projectAddValidation
+        - src/controller/tasks/tasks.validator.taskAddValidation
 
   updateTask:
     handler: src/controller/tasks/tasks.controller.updateTask

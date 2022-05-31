@@ -1,5 +1,5 @@
 const joi = require('joi');
-const { errorResponse } = require('../../utils/responses');
+const { errorResponse, successResponse } = require('../../utils/responses');
 
 const taskAddObject = joi.object({
   title: joi.string().trim(true).min(5).required(),
@@ -7,16 +7,18 @@ const taskAddObject = joi.object({
   projectID: joi.number().required(),
 });
 
-exports.taskAddValidation = async (req, res, next) => {
+exports.taskAddValidation = async (event, context) => {
+  const eventBody = JSON.parse(event.body);
   const payload = {
-    title: req.body.title,
-    description: req.body.description,
-    projectID: req.body.projectID,
+    title: eventBody.title,
+    description: eventBody.description,
+    projectID: eventBody.projectID,
   };
 
   const { error } = taskAddObject.validate(payload);
   if (error) {
-    return errorResponse(req, res, error.message, 206, error.details);
+    context.end();
+    return errorResponse(error.message, 406);
   }
-  return next();
+  return successResponse(payload, 200);
 };
