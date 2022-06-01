@@ -1,0 +1,57 @@
+org: manishrathod769
+app: crudwithdynamodb
+service: crudWithDynamoDB
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+
+plugins:
+  - serverless-offline
+  - serverless-middleware
+  - serverless-dynamodb-local
+
+custom:
+  dynamodb:
+  # If you only want to use DynamoDB Local in some stages, declare them here
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+
+functions:
+  # api:
+  #   handler: handler.handler
+  #   events:
+  #     - httpApi: '*'
+
+  # Users
+  getAllUser:
+    handler: src/controller/users/users.controller.getAllUser
+    events:
+      - httpApi:
+          path: /users
+          method: get
+
+  # Projects
+  getAllProject:
+    handler: src/controller/projects/projects.controller.getAllProject
+    events:
+      - httpApi:
+          path: /projects
+          method: get
+
+  # Tasks
+  getAllTask:
+    handler: src/controller/tasks/tasks.controller.getAllTask
+    events:
+      - httpApi:
+          path: /tasks
+          method: get
