@@ -4,7 +4,7 @@ const { errorResponse } = require('../utils/responses');
 const { createTable } = require('../utils/createTable');
 const { TASK } = require('../constant/tableName.constants');
 
-exports.checkIfProjectTableExists = async (event, context) => {
+exports.checkIfTaskTableExists = async (event, context) => {
   try {
     const dynamoDB = new AWS.DynamoDB();
     const params = {

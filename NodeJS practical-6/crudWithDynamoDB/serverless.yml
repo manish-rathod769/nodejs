@@ -120,3 +120,35 @@ functions:
       - httpApi:
           path: /tasks
           method: get
+
+  getOneTask:
+    handler: src/controller/tasks/tasks.controller.getOneTask
+    events:
+      - httpApi:
+          path: /tasks/{taskId}
+          method: get
+
+  addTask:
+    handler: src/controller/tasks/tasks.controller.addTask
+    events:
+      - httpApi:
+          path: /tasks
+          method: post
+    middleware:
+      pre: src/controller/tasks/tasks.validator.taskValidation
+
+  updateTask:
+    handler: src/controller/tasks/tasks.controller.updateTask
+    events:
+      - httpApi:
+          path: /tasks/{taskId}
+          method: put
+    middleware:
+      pre: src/controller/tasks/tasks.validator.taskValidation
+        
+  deleteTask:
+    handler: src/controller/tasks/tasks.controller.deleteTask
+    events:
+      - httpApi:
+          path: /tasks/{taskId}
+          method: delete
