@@ -81,6 +81,38 @@ functions:
           path: /projects
           method: get
 
+  getOneProject:
+    handler: src/controller/projects/projects.controller.getOneProject
+    events:
+      - httpApi:
+          path: /projects/{projectId}
+          method: get
+
+  addProject:
+    handler: src/controller/projects/projects.controller.addProject
+    events:
+      - httpApi:
+          path: /projects
+          method: post
+    middleware:
+      pre: src/controller/projects/projects.validator.projectValidation
+
+  updateProject:
+    handler: src/controller/projects/projects.controller.updateProject
+    events:
+      - httpApi:
+          path: /projects/{projectId}
+          method: put
+    middleware:
+      pre: src/controller/projects/projects.validator.projectValidation
+        
+  deleteProject:
+    handler: src/controller/projects/projects.controller.deleteProject
+    events:
+      - httpApi:
+          path: /projects/{projectId}
+          method: delete
+
   # Tasks
   getAllTask:
     handler: src/controller/tasks/tasks.controller.getAllTask
