@@ -7,7 +7,7 @@ const userAddObject = joi.object({
   designation: joi.string().trim(true).required(),
   department: joi.string().trim(true).required(),
   technologiesKnown: joi.array().items(joi.string()).min(1).required(),
-  projects: joi.array().items(joi.number()).unique().min(1)
+  projects: joi.array().items(joi.string()).unique().min(1)
     .required(),
 });
 

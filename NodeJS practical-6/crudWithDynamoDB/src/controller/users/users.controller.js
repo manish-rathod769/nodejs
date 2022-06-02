@@ -2,6 +2,7 @@ const { v4: uuidv4 } = require('uuid');
 const { AWS } = require('../../utils/aws.configure');
 const { USER } = require('../../constant/tableName.constants');
 const { successResponse, errorResponse } = require('../../utils/responses');
+const { nonExistProjects } = require('../../utils/check.existance');
 
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
 
@@ -74,6 +75,12 @@ exports.addUser = async (event) => {
   };
 
   try {
+    // Check if entered projects are valid or not
+    const invalidProject = await nonExistProjects(eventBody.projects);
+    if (invalidProject.length) {
+      return errorResponse({ message: `Projects ${invalidProject} does not exist !!!` }, 412);
+    }
+
     await dynamoDbClient.put(params).promise();
     return successResponse({ message: 'Data added successfully...' }, 200);
   } catch (error) {
@@ -88,6 +95,12 @@ exports.updateUser = async (event) => {
   } = eventBody;
 
   try {
+    // Check if entered projects are valid or not
+    const invalidProject = await nonExistProjects(eventBody.projects);
+    if (invalidProject.length) {
+      return errorResponse({ message: `Projects ${invalidProject} does not exist !!!` }, 412);
+    }
+
     // Check if user exist or not
     if (!(await checkIfUserExist(event.pathParameters.userId))) {
       return successResponse({ message: `User does not exist with userId: ${event.pathParameters.userId}` }, 200);

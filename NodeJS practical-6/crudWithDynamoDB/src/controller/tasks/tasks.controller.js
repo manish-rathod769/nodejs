@@ -2,6 +2,7 @@ const { v4: uuidv4 } = require('uuid');
 const { AWS } = require('../../utils/aws.configure');
 const { TASK } = require('../../constant/tableName.constants');
 const { successResponse, errorResponse } = require('../../utils/responses');
+const { nonExistProjects } = require('../../utils/check.existance');
 
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
 
@@ -50,7 +51,7 @@ exports.getOneTask = async (event) => {
     if (Item) {
       return successResponse(Item, 200);
     }
-    return successResponse(`Task does not exist with taskId: ${event.pathParameters.taskId}`, 200);
+    return successResponse({ message: `Task does not exist with taskId: ${event.pathParameters.taskId}` }, 200);
   } catch (error) {
     return errorResponse(error, 500);
   }
@@ -73,8 +74,14 @@ exports.addTask = async (event) => {
   };
 
   try {
+    // Check if entered project exist or not
+    const invalidProject = await nonExistProjects(Array(1).fill(projectID));
+    if (invalidProject.length) {
+      return errorResponse({ message: `Project ${invalidProject} does not exist !!!` }, 412);
+    }
+
     await dynamoDbClient.put(params).promise();
-    return successResponse('Task added successfully...', 200);
+    return successResponse({ message: 'Task added successfully...' }, 200);
   } catch (error) {
     return errorResponse(error, 500);
   }
@@ -92,6 +99,12 @@ exports.updateTask = async (event) => {
       return successResponse({ message: `Task does not exist with taskId: ${event.pathParameters.taskId}` }, 200);
     }
 
+    // Check if entered project exist or not
+    const invalidProject = await nonExistProjects(Array(1).fill(projectID));
+    if (invalidProject.length) {
+      return errorResponse({ message: `Project ${invalidProject} does not exist !!!` }, 412);
+    }
+
     const params = {
       TableName: TASK,
       Key: {
@@ -107,7 +120,7 @@ exports.updateTask = async (event) => {
     };
 
     await dynamoDbClient.update(params).promise();
-    return successResponse('Task\'s data updated successfully...', 500);
+    return successResponse({ message: 'Task\'s data updated successfully...' }, 500);
   } catch (error) {
     return errorResponse(error, 500);
   }
@@ -128,7 +141,7 @@ exports.deleteTask = async (event) => {
     }
 
     await dynamoDbClient.delete(params).promise();
-    return successResponse('Task\'s data deleted successfully...', 500);
+    return successResponse({ message: 'Task\'s data deleted successfully...' }, 500);
   } catch (error) {
     return errorResponse(error, 500);
   }
