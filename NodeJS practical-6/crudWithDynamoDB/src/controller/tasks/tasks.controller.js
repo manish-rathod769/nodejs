@@ -5,6 +5,25 @@ const { successResponse, errorResponse } = require('../../utils/responses');
 
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
 
+const checkIfTaskExist = async (taskId) => {
+  const params = {
+    TableName: TASK,
+    Key: {
+      ID: taskId,
+    },
+  };
+
+  try {
+    const { Item } = await dynamoDbClient.get(params).promise();
+    if (Item) {
+      return true;
+    }
+    return false;
+  } catch (error) {
+    return false;
+  }
+};
+
 exports.getAllTask = async () => {
   const params = {
     TableName: TASK,
@@ -68,6 +87,11 @@ exports.updateTask = async (event) => {
   } = eventBody;
 
   try {
+    // Check if task exist or not
+    if (!(await checkIfTaskExist(event.pathParameters.taskId))) {
+      return successResponse({ message: `Task does not exist with taskId: ${event.pathParameters.taskId}` }, 200);
+    }
+
     const params = {
       TableName: TASK,
       Key: {
@@ -98,6 +122,11 @@ exports.deleteTask = async (event) => {
   };
 
   try {
+    // Check if task exist or not
+    if (!(await checkIfTaskExist(event.pathParameters.taskId))) {
+      return successResponse({ message: `Task does not exist with taskId: ${event.pathParameters.taskId}` }, 200);
+    }
+
     await dynamoDbClient.delete(params).promise();
     return successResponse('Task\'s data deleted successfully...', 500);
   } catch (error) {

@@ -5,6 +5,24 @@ const { successResponse, errorResponse } = require('../../utils/responses');
 
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
 
+const checkIfUserExist = async (userId) => {
+  const params = {
+    TableName: USER,
+    Key: {
+      ID: userId,
+    },
+  };
+  try {
+    const { Item } = await dynamoDbClient.get(params).promise();
+    if (Item) {
+      return true;
+    }
+    return false;
+  } catch (error) {
+    return false;
+  }
+};
+
 exports.getAllUser = async () => {
   const params = {
     TableName: USER,
@@ -25,13 +43,12 @@ exports.getOneUser = async (event) => {
       ID: event.pathParameters.userId,
     },
   };
-
   try {
     const { Item } = await dynamoDbClient.get(params).promise();
     if (Item) {
       return successResponse(Item, 200);
     }
-    return successResponse(`User does not exist with userId: ${event.pathParameters.userId}`, 200);
+    return successResponse({ message: `User does not exist with userId: ${event.pathParameters.userId}` }, 200);
   } catch (error) {
     return errorResponse(error, 500);
   }
@@ -58,7 +75,7 @@ exports.addUser = async (event) => {
 
   try {
     await dynamoDbClient.put(params).promise();
-    return successResponse('Data added successfully...', 200);
+    return successResponse({ message: 'Data added successfully...' }, 200);
   } catch (error) {
     return errorResponse(error, 500);
   }
@@ -71,6 +88,12 @@ exports.updateUser = async (event) => {
   } = eventBody;
 
   try {
+    // Check if user exist or not
+    if (!(await checkIfUserExist(event.pathParameters.userId))) {
+      return successResponse({ message: `User does not exist with userId: ${event.pathParameters.userId}` }, 200);
+    }
+
+    await checkIfUserExist(event.pathParameters.userId);
     const params = {
       TableName: USER,
       Key: {
@@ -89,7 +112,7 @@ exports.updateUser = async (event) => {
     };
 
     await dynamoDbClient.update(params).promise();
-    return successResponse('User\'s data updated successfully...', 500);
+    return successResponse({ message: 'User\'s data updated successfully...' }, 500);
   } catch (error) {
     return errorResponse(error, 500);
   }
@@ -104,8 +127,13 @@ exports.deleteUser = async (event) => {
   };
 
   try {
+    // Check if user exist or not
+    if (!(await checkIfUserExist(event.pathParameters.userId))) {
+      return successResponse({ message: `User does not exist with userId: ${event.pathParameters.userId}` }, 200);
+    }
+
     await dynamoDbClient.delete(params).promise();
-    return successResponse('User\'s data deleted successfully...', 500);
+    return successResponse({ message: 'User\'s data deleted successfully...' }, 500);
   } catch (error) {
     return errorResponse(error, 500);
   }

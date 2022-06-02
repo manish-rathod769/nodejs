@@ -5,6 +5,25 @@ const { successResponse, errorResponse } = require('../../utils/responses');
 
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
 
+const checkIfProjectExist = async (projectId) => {
+  const params = {
+    TableName: PROJECT,
+    Key: {
+      ID: projectId,
+    },
+  };
+
+  try {
+    const { Item } = await dynamoDbClient.get(params).promise();
+    if (Item) {
+      return true;
+    }
+    return false;
+  } catch (error) {
+    return false;
+  }
+};
+
 exports.getAllProject = async () => {
   const params = {
     TableName: PROJECT,
@@ -31,7 +50,7 @@ exports.getOneProject = async (event) => {
     if (Item) {
       return successResponse(Item, 200);
     }
-    return successResponse(`Project does not exist with projectId: ${event.pathParameters.projectId}`, 200);
+    return successResponse({ message: `Project does not exist with projectId: ${event.pathParameters.projectId}` }, 200);
   } catch (error) {
     return errorResponse(error, 500);
   }
@@ -54,7 +73,7 @@ exports.addProject = async (event) => {
 
   try {
     await dynamoDbClient.put(params).promise();
-    return successResponse('Project added successfully...', 200);
+    return successResponse({ message: 'Project added successfully...' }, 200);
   } catch (error) {
     return errorResponse(error, 500);
   }
@@ -67,6 +86,11 @@ exports.updateProject = async (event) => {
   } = eventBody;
 
   try {
+    // Check if project exist or not
+    if (!(await checkIfProjectExist(event.pathParameters.userId))) {
+      return successResponse({ message: `Project does not exist with projectId: ${event.pathParameters.projectId}` }, 200);
+    }
+
     const params = {
       TableName: PROJECT,
       Key: {
@@ -81,7 +105,7 @@ exports.updateProject = async (event) => {
     };
 
     await dynamoDbClient.update(params).promise();
-    return successResponse('Project\'s data updated successfully...', 500);
+    return successResponse({ message: 'Project\'s data updated successfully...' }, 500);
   } catch (error) {
     return errorResponse(error, 500);
   }
@@ -96,8 +120,13 @@ exports.deleteProject = async (event) => {
   };
 
   try {
+    // Check if project exist or not
+    if (!(await checkIfProjectExist(event.pathParameters.userId))) {
+      return successResponse({ message: `Project does not exist with projectId: ${event.pathParameters.projectId}` }, 200);
+    }
+
     await dynamoDbClient.delete(params).promise();
-    return successResponse('Project\'s data deleted successfully...', 500);
+    return successResponse({ message: 'Project\'s data deleted successfully...' }, 500);
   } catch (error) {
     return errorResponse(error, 500);
   }

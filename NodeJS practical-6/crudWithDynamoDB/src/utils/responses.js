@@ -1,6 +1,6 @@
 exports.successResponse = (data, code = 200) => ({
   statusCode: code,
-  body: JSON.stringify({ data }),
+  body: JSON.stringify(data),
 });
 
 exports.errorResponse = (errorMessage, code) => ({
