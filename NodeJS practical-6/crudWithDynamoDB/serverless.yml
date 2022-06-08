@@ -1,0 +1,154 @@
+org: manishrathod769
+app: crudwithdynamodb
+service: crudWithDynamoDB
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+
+plugins:
+  - serverless-offline
+  - serverless-middleware
+  - serverless-dynamodb-local
+
+custom:
+  dynamodb:
+  # If you only want to use DynamoDB Local in some stages, declare them here
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+
+functions:
+  # api:
+  #   handler: handler.handler
+  #   events:
+  #     - httpApi: '*'
+
+  # Users
+
+  getAllUser:
+    handler: src/controller/users/users.controller.getAllUser
+    events:
+      - httpApi:
+          path: /users
+          method: get
+
+  getOneUser:
+    handler: src/controller/users/users.controller.getOneUser
+    events:
+      - httpApi:
+          path: /users/{userId}
+          method: get
+
+  addUser:
+    handler: src/controller/users/users.controller.addUser
+    events:
+      - httpApi:
+          path: /users
+          method: post
+    middleware:
+      pre: src/controller/users/users.validator.userValidation
+
+  updateUser:
+    handler: src/controller/users/users.controller.updateUser
+    events:
+      - httpApi:
+          path: /users/{userId}
+          method: put
+    middleware:
+      pre: src/controller/users/users.validator.userValidation
+        
+  deleteUser:
+    handler: src/controller/users/users.controller.deleteUser
+    events:
+      - httpApi:
+          path: /users/{userId}
+          method: delete
+
+  # Projects
+  getAllProject:
+    handler: src/controller/projects/projects.controller.getAllProject
+    events:
+      - httpApi:
+          path: /projects
+          method: get
+
+  getOneProject:
+    handler: src/controller/projects/projects.controller.getOneProject
+    events:
+      - httpApi:
+          path: /projects/{projectId}
+          method: get
+
+  addProject:
+    handler: src/controller/projects/projects.controller.addProject
+    events:
+      - httpApi:
+          path: /projects
+          method: post
+    middleware:
+      pre: src/controller/projects/projects.validator.projectValidation
+
+  updateProject:
+    handler: src/controller/projects/projects.controller.updateProject
+    events:
+      - httpApi:
+          path: /projects/{projectId}
+          method: put
+    middleware:
+      pre: src/controller/projects/projects.validator.projectValidation
+        
+  deleteProject:
+    handler: src/controller/projects/projects.controller.deleteProject
+    events:
+      - httpApi:
+          path: /projects/{projectId}
+          method: delete
+
+  # Tasks
+  getAllTask:
+    handler: src/controller/tasks/tasks.controller.getAllTask
+    events:
+      - httpApi:
+          path: /tasks
+          method: get
+
+  getOneTask:
+    handler: src/controller/tasks/tasks.controller.getOneTask
+    events:
+      - httpApi:
+          path: /tasks/{taskId}
+          method: get
+
+  addTask:
+    handler: src/controller/tasks/tasks.controller.addTask
+    events:
+      - httpApi:
+          path: /tasks
+          method: post
+    middleware:
+      pre: src/controller/tasks/tasks.validator.taskValidation
+
+  updateTask:
+    handler: src/controller/tasks/tasks.controller.updateTask
+    events:
+      - httpApi:
+          path: /tasks/{taskId}
+          method: put
+    middleware:
+      pre: src/controller/tasks/tasks.validator.taskValidation
+        
+  deleteTask:
+    handler: src/controller/tasks/tasks.controller.deleteTask
+    events:
+      - httpApi:
+          path: /tasks/{taskId}
+          method: delete
