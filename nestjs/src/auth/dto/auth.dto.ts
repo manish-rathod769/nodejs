@@ -20,7 +20,20 @@ export class AuthDto {
   email: string;
 
   @classVal.IsString()
-  @classVal.MinLength(10, {
+  @classVal.MinLength(8, {
+    message:
+      'Password is too short. Min required length is $constraint1, but actual is $value',
+  })
+  password: string;
+}
+
+export class signInDto {
+  @classVal.IsEmail()
+  @classVal.IsNotEmpty()
+  email: string;
+
+  @classVal.IsString()
+  @classVal.MinLength(8, {
     message:
       'Password is too short. Min required length is $constraint1, but actual is $value',
   })

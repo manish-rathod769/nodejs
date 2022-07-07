@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthDto } from './dto';
+import { AuthDto, signInDto } from './dto';
 import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
@@ -28,10 +28,37 @@ export class AuthService {
           throw new ForbiddenException('Email already taken !!!');
         }
       }
-      return error.json();
+      throw error;
     }
   }
-  signin() {
-    return 'Signin method from AuthService';
+  async signin(dto: signInDto) {
+    try {
+      // Check if user exist or not
+      const matchedUser = await this.prismaService.User.findUnique({
+        where: {
+          email: dto.email,
+        },
+      });
+
+      // If User doen not exist throw error
+      if (!matchedUser) {
+        throw new ForbiddenException('Invalid Credentials !!!');
+      }
+
+      // If User exist then match password
+      const passwordFlag = await argon.verify(
+        matchedUser.password,
+        dto.password,
+      );
+
+      if (!passwordFlag) {
+        throw new ForbiddenException('Invalid Credentials !!!');
+      }
+
+      delete matchedUser.password;
+      return matchedUser;
+    } catch (error) {
+      throw error;
+    }
   }
 }
