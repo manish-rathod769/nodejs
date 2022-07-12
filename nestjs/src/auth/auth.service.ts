@@ -3,10 +3,16 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthDto, signInDto } from './dto';
 import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable({})
 export class AuthService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private jwt: JwtService,
+    private config: ConfigService,
+  ) {}
   async signup(dto: AuthDto) {
     try {
       //  Create hashed password
@@ -31,6 +37,7 @@ export class AuthService {
       throw error;
     }
   }
+
   async signin(dto: signInDto) {
     try {
       // Check if user exist or not
@@ -55,10 +62,24 @@ export class AuthService {
         throw new ForbiddenException('Invalid Credentials !!!');
       }
 
-      delete matchedUser.password;
-      return matchedUser;
+      return this.signToken(matchedUser.id, matchedUser.email);
     } catch (error) {
       throw error;
     }
+  }
+
+  async signToken(
+    userId: number,
+    email: string,
+  ): Promise<{ accessToken: string }> {
+    const payload = {
+      sub: userId,
+      email,
+    };
+    const accessToken = await this.jwt.signAsync(payload, {
+      expiresIn: '15m',
+      secret: this.config.get('JWT_SECRET'),
+    });
+    return { accessToken };
   }
 }
