@@ -9,7 +9,7 @@ const USERS_TABLE = process.env.USERS_TABLE;
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
 
 app.use(express.json());
-app.use(bodyParser());
+app.use(bodyParser.json());
 
 app.get("/users", async (req, res) => {
   const params = {
