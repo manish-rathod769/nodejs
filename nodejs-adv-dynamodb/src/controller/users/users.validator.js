@@ -38,3 +38,28 @@ exports.addUserValidation = async (event, context) => {
   }
   return eventBody;
 };
+
+const updateUserObj = joi.object({
+  firstName: joi.string().trim(true).required(),
+  lastName: joi.string().trim(true).required(),
+  password: joi.string().trim(true).min(8).max(20)
+    .required(),
+  contactNo: joi.string().pattern(contactPattern).trim(true).required(),
+});
+
+exports.updateUserValidation = async (event, context) => {
+  const eventBody = multipart.parse(event, true);
+
+  const payload = {
+    firstName: eventBody.firstName,
+    lastName: eventBody.lastName,
+    password: eventBody.password,
+    contactNo: eventBody.contactNo,
+  };
+  const { error } = updateUserObj.validate(payload);
+  if (error) {
+    context.end();
+    return errorResponse(error.message, 406);
+  }
+  return eventBody;
+};
