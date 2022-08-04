@@ -1,0 +1,100 @@
+org: manishrathod769
+app: nodejs-adv-dynamodb
+service: nodejs-adv-dynamodb
+frameworkVersion: '3'
+
+custom:
+  userTable: 'users'
+  dynamodb:
+    stages:
+      - dev
+    start:
+      docker: true
+      port: 8000
+      inMemory: true
+      migrate: true
+      seed: true
+      noStart: true
+      convertEmptyValues: true
+
+plugins:
+  - serverless-offline
+  - serverless-middleware
+  - serverless-dynamodb-local
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - s3:*
+            - ses:*
+          Resource:
+            - Fn::GetAtt: [ UsersTable, Arn ]
+            - '*'
+  environment:
+    USERS_TABLE: ${self:custom.userTable}
+
+functions:
+  
+  addUser:
+    handler: src/controller/users/users.controller.addUser 
+    events:
+      - httpApi:
+          path: /users
+          method: post
+    middleware:
+      pre:
+        - src/controller/users/users.validator.addUserValidation
+        - then: src/utils/uploadS3.uploadS3
+  
+  getAllUser:
+    handler: src/controller/users/users.controller.getAllUser
+    events:
+      - httpApi:
+          path: /users
+          method: get
+
+  getOneUser:
+    handler: src/controller/users/users.controller.getOneUser
+    events:
+      - httpApi:
+          path: /users/{userId}
+          method: get
+
+  updateUser:
+    handler: src/controller/users/users.controller.updateUser
+    events:
+      - httpApi:
+          path: /users/{userId}
+          method: put
+  
+  deleteUser:
+    handler: src/controller/users/users.controller.deleteUser
+    events:
+      - httpApi:
+          path: /users/{userId}
+          method: delete
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:custom.userTable}
