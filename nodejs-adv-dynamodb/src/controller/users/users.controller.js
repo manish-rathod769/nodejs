@@ -1,6 +1,6 @@
 // const { v4: uuidv4 } = require('uuid');
 const multipart = require('aws-lambda-multipart-parser');
-const { AWS } = require('../../config/aws.local.config');
+const { AWS } = require('../../config/aws.config');
 const { successResponse, errorResponse } = require('../../helper/responses.helper');
 
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
@@ -27,14 +27,18 @@ const checkIfUserExist = async (userId) => {
 exports.getAllUser = async () => {
   const params = {
     TableName: USER,
+    IndexName: 'firstName-index',
+    KeyConditionExpression: 'firstName = :firstName',
+    FilterExpression: 'firstName = :firstName',
+    ExpressionAttributeValues: {
+      ':firstName': 'Manish',
+    },
   };
-
-  try {
-    const users = await dynamoDbClient.scan(params).promise();
-    return successResponse(users, 200);
-  } catch (error) {
-    return errorResponse(error, 500);
+  const users = await dynamoDbClient.scan(params).promise();
+  if (!users) {
+    return errorResponse({ message: 'Error while fetching users data!!!' }, 500);
   }
+  return successResponse(users, 200);
 };
 
 exports.getOneUser = async (event) => {
@@ -56,37 +60,36 @@ exports.getOneUser = async (event) => {
 };
 
 exports.addUser = async (event, context) => {
-  try {
-    // Parse dta from event.body
-    const eventBody = multipart.parse(event, true);
-    const {
-      firstName, lastName, email, password, contactNo, GSTNo, role,
-    } = eventBody;
+  // Parse data from event.body
+  const eventBody = multipart.parse(event, true);
+  const {
+    firstName, lastName, email, password, contactNo, GSTNo, role,
+  } = eventBody;
 
-    // Extract data from prev middleware
-    const prevData = JSON.parse(context.prev.body).data;
+  // Extract data from prev middleware
+  const prevData = JSON.parse(context.prev.body).data;
 
-    // Insert dta in to database
-    const params = {
-      TableName: USER,
-      Item: {
-        userId: prevData.userId,
-        firstName,
-        lastName,
-        email,
-        password,
-        contactNo,
-        GSTNo,
-        role,
-        avatar: prevData.objURL,
-      },
-    };
-    await dynamoDbClient.put(params).promise();
-    delete params.Item.password;
-    return successResponse({ user: params.Item, message: 'Data added successfully...' }, 200);
-  } catch (error) {
-    return errorResponse(error.message, 500);
+  // Insert dta in to database
+  const params = {
+    TableName: USER,
+    Item: {
+      userId: prevData.userId,
+      firstName,
+      lastName,
+      email,
+      password,
+      contactNo,
+      GSTNo,
+      role,
+      avatar: prevData.objURL,
+    },
+  };
+  const user = await dynamoDbClient.put(params).promise();
+  if (!user) {
+    return errorResponse({ message: 'Error while adding user data!!!' }, 500);
   }
+  delete params.Item.password;
+  return successResponse({ user: params.Item, message: 'Data added successfully...' }, 200);
 };
 
 exports.updateUser = async (event) => {
