@@ -1,0 +1,64 @@
+org: manishrathod769
+app: aws-cognito
+service: aws-cognito
+
+frameworkVersion: '3'
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  environment:
+    USER_POOL_ID: { Ref: UserPool }
+    CLIENT_POOL_ID: { Ref: UserClientPool }
+
+custom:
+  userPoolName: 'aws-cognito-user-pool'
+  clientUserPoolName: 'aws-cognito-cliet-user-pool'
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - httpApi:
+          path: /fusers
+          method: get
+
+  registerUser:
+    handler: src/controller/users/users.controller.registerUser
+    events:
+      - httpApi:
+          path: /users
+          method: get
+
+resources:
+  Resources:
+    UserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:custom.userPoolName}
+        Schema:
+            - Name: email
+              AttributeDataType: String
+              Required: true
+              Mutable: true
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 8
+            RequireUppercase: true
+            RequireLowercase: true
+            RequireNumbers: true
+            RequireSymbols: true
+        AutoVerifiedAttributes: ['email']
+    UserClientPool:
+      Type: AWS::Cognito::UserPoolClient
+      Properties: 
+        ClientName: ${self:custom.clientUserPoolName}
+        GenerateSecret: false
+        UserPoolId: {Ref: UserPool}
+        AccessTokenValidity: 5
+        IdTokenValidity: 5
+        ExplicitAuthFlows:
+          - "ADMIN_NO_SRP_AUTH"
