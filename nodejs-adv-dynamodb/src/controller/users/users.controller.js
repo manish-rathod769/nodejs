@@ -1,6 +1,6 @@
 // const { v4: uuidv4 } = require('uuid');
 const multipart = require('aws-lambda-multipart-parser');
-const { AWS } = require('../../config/aws.config');
+const { AWS } = require('../../config/aws.local.config');
 const { successResponse, errorResponse } = require('../../helper/responses.helper');
 
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
@@ -29,12 +29,11 @@ exports.getAllUser = async () => {
     TableName: USER,
     IndexName: 'firstName-index',
     KeyConditionExpression: 'firstName = :firstName',
-    FilterExpression: 'firstName = :firstName',
     ExpressionAttributeValues: {
       ':firstName': 'Manish',
     },
   };
-  const users = await dynamoDbClient.scan(params).promise();
+  const users = await dynamoDbClient.query(params).promise();
   if (!users) {
     return errorResponse({ message: 'Error while fetching users data!!!' }, 500);
   }
