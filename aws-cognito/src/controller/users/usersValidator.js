@@ -1,8 +1,6 @@
 exports.validateInput = (data) => {
-  const body = JSON.parse(data);
-  const { email, password } = body
+  const { email, password } = data;
   if (!email || !password || password.length < 6)
       return false
   return true
 }
-

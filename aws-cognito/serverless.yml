@@ -7,31 +7,70 @@ frameworkVersion: '3'
 plugins:
   - serverless-offline
 
-provider:
-  name: aws
-  runtime: nodejs14.x
-  environment:
-    USER_POOL_ID: { Ref: UserPool }
-    CLIENT_POOL_ID: { Ref: UserClientPool }
-
 custom:
   userPoolName: 'aws-cognito-user-pool'
   clientUserPoolName: 'aws-cognito-cliet-user-pool'
+  # serverless-offline:
+    # ignoreJWTSignature: true
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - cognito-idp:AdminInitiateAuth
+            - cognito-idp:AdminCreateUser
+            - cognito-idp:AdminSetUserPassword
+          Resource: "*"
+  httpApi:
+    authorizers:
+      customAuthorizer:
+        type: request
+        functionName: authorizerFunc
+        
+  environment:
+    # user_pool_id: { Ref: UserPool }
+    # client_id: { Ref: UserClientPool }
 
 functions:
-  hello:
-    handler: handler.hello
-    events:
-      - httpApi:
-          path: /fusers
-          method: get
-
   registerUser:
-    handler: src/controller/users/users.controller.registerUser
+    handler: src/controller/users/usersController.registerUser
     events:
       - httpApi:
           path: /users
-          method: get
+          method: post
+          # cors: true
+  
+  loginUser:
+    handler: src/controller/users/usersController.loginUser
+    events:
+      - httpApi:
+          path: /login
+          method: post
+          # cors: true
+  
+  # protectedRoute:
+  #   handler: src/controller/users/usersController.protectedRoute
+  #   events:
+  #     - httpApi:
+  #         path: /protected
+  #         method: get
+  #         # cors: true
+  #         authorizer:
+  #           name: customAuthorizer
+            # type: COGNITO_USER_POOLS
+            # arn:
+            #   Fn::GetAtt:
+            #     - UserPool
+            #     - Arn
+            # claims:
+            #   - email
+
+  # authorizerFunc:
+  #   handler: src/authorizer/verifyTokenAuthorizer
 
 resources:
   Resources:
