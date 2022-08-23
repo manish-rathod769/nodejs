@@ -27,13 +27,13 @@ const checkIfUserExist = async (userId) => {
 exports.getAllUser = async () => {
   const params = {
     TableName: USER,
-    IndexName: 'firstName-index',
-    KeyConditionExpression: 'firstName = :firstName',
-    ExpressionAttributeValues: {
-      ':firstName': 'Manish',
-    },
+    // IndexName: 'firstName-index',
+    // KeyConditionExpression: 'firstName = :firstName',
+    // ExpressionAttributeValues: {
+    //   ':firstName': 'Manish',
+    // },
   };
-  const users = await dynamoDbClient.query(params).promise();
+  const users = await dynamoDbClient.scan(params).promise();
   if (!users) {
     return errorResponse({ message: 'Error while fetching users data!!!' }, 500);
   }

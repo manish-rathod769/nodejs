@@ -5,7 +5,7 @@ frameworkVersion: '3'
 
 custom:
   userTable: 'users'
-  bucketName: 'serverless-dynamodb-manish'
+  bucketName: 'crud-dynamodb-user-profile'
   dynamodb:
     stages:
       - dev
