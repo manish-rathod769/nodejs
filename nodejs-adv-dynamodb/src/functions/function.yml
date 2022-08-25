@@ -1,0 +1,41 @@
+addUser:
+  handler: src/controller/users/users.controller.addUser 
+  events:
+    - httpApi:
+        path: /users
+        method: post
+  middleware:
+    pre:
+      - src/controller/users/users.validator.addUserValidation
+      - src/utils/uploadS3.uploadS3
+
+getAllUser:
+  handler: src/controller/users/users.controller.getAllUser
+  events:
+    - httpApi:
+        path: /users
+        method: get
+
+getOneUser:
+  handler: src/controller/users/users.controller.getOneUser
+  events:
+    - httpApi:
+        path: /users/{userId}
+        method: get
+
+updateUser:
+  handler: src/controller/users/users.controller.updateUser
+  events:
+    - httpApi:
+        path: /users/{userId}
+        method: put
+  middleware:
+    pre:
+      - src/controller/users/users.validator.updateUserValidation
+
+deleteUser:
+  handler: src/controller/users/users.controller.deleteUser
+  events:
+    - httpApi:
+        path: /users/{userId}
+        method: delete

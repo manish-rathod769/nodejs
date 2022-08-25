@@ -1,0 +1,4 @@
+UserProfileBucket:
+  Type: AWS::S3::Bucket
+  Properties:
+    BucketName: file-demo-bucket

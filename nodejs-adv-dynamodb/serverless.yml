@@ -26,6 +26,13 @@ plugins:
 provider:
   name: aws
   runtime: nodejs14.x
+
+  # ============= Define i am role in another file =============
+  # iam:
+  # role:
+  #   statements:
+  #     - ${file(src/roles/dynamodbRole.yml):DynamoDB}
+
   iam:
     role:
       statements:
@@ -51,6 +58,9 @@ provider:
   environment:
     USERS_TABLE: ${self:custom.userTable}
     AWS_BUCKET_NAME: ${self:custom.bucketName}
+
+# ========== Define fuctions in separete file =======
+# functions: ${file(src/functions/function.yml)}
 
 functions:
   
@@ -95,6 +105,11 @@ functions:
       - httpApi:
           path: /users/{userId}
           method: delete
+
+# ======= Define reaources in another file =========== 
+# resources:
+#   Resources:
+#     UsersTable: ${file(src/resources/UsersTable.yml):UsersTable}
 
 resources:
   Resources:

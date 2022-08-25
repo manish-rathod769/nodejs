@@ -1,0 +1,6 @@
+s3Bucket:
+  Effect: Allow
+  Action:
+    - s3:*
+  Resource:
+    - Fn::GetAtt: [ UserProfileBucket, Arn ]
