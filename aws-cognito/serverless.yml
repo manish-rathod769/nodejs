@@ -31,7 +31,7 @@ provider:
         type: request
         functionName: authorizerFunc
         
-  environment:
+  # environment:
     # user_pool_id: { Ref: UserPool }
     # client_id: { Ref: UserClientPool }
 
