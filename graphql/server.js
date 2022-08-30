@@ -1,8 +1,10 @@
 /* eslint-disable no-console */
 const express = require('express');
 const dotenv = require('dotenv');
+const { graphqlHTTP } = require('express-graphql');
 
-const { conncectDB } = require('./db/conncetDB');
+const { conncectDB } = require('./src/db/conncetDB');
+const schema = require('./src/graphql/schema');
 
 dotenv.config();
 const app = express();
@@ -13,5 +15,10 @@ conncectDB();
 app.get('/', (req, res) => {
   res.json({ message: 'Hello World!' });
 });
+
+app.use('/graphql', graphqlHTTP({
+  schema,
+  graphiql: true,
+}));
 
 app.listen(PORT, () => console.log(`Server is running on PORT ${PORT}...`));
