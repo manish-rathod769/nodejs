@@ -1,0 +1,20 @@
+org: manishrathod769
+app: aws-ses
+service: aws-ses
+
+plugins:
+  - serverless-offline
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+
+functions:
+  hello:
+    handler: handler.sendEmail
+    events:
+      - httpApi:
+          path: /email
+          method: get
