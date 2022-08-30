@@ -10,10 +10,10 @@ dotenv.config();
 const app = express();
 
 const PORT = process.env.PORT || 3000;
-conncectDB();
+conncectDB(); // connect to MongoDB
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Hello World!' });
+  res.json({ message: 'Success...' });
 });
 
 app.use('/graphql', graphqlHTTP({
