@@ -1,5 +1,4 @@
 /* eslint-disable no-use-before-define */
-/* eslint-disable no-unused-vars */
 const {
   GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList,
 } = require('graphql');
@@ -16,7 +15,7 @@ const UserType = new GraphQLObjectType({
     email: { type: GraphQLString },
     posts: {
       type: new GraphQLList(PostType),
-      resolve(parent, args) {
+      resolve(parent) {
         return Post.find({ userId: parent.id });
       },
     },
@@ -33,13 +32,13 @@ const PostType = new GraphQLObjectType({
     body: { type: GraphQLString },
     user: {
       type: UserType,
-      resolve(parent, args) {
+      resolve(parent) {
         return User.findById(parent.userId);
       },
     },
     comments: {
       type: GraphQLList(CommentType),
-      resolve(parent, args) {
+      resolve(parent) {
         return Comment.find({ postId: parent.id });
       },
     },
@@ -56,13 +55,13 @@ const CommentType = new GraphQLObjectType({
     comment: { type: GraphQLString },
     user: {
       type: UserType,
-      resolve(parent, args) {
+      resolve(parent) {
         return User.findById(parent.userId);
       },
     },
     post: {
       type: PostType,
-      resolve(parent, args) {
+      resolve(parent) {
         return Post.findById(parent.postId);
       },
     },

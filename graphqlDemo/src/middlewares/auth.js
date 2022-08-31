@@ -1,14 +1,20 @@
-/* eslint-disable no-console */
 const jsonwebtoken = require('jsonwebtoken');
+const { User } = require('../models/index');
 
-const authentication = async (req) => {
+const authentication = async (req, res, next) => {
   try {
-    const token = req.headers.authorization.split(' ')[1];
-    const isAuth = jsonwebtoken.verify(token, process.env.JWT_SECRET);
-    return isAuth;
+    const token = req.headers.authorization?.split(' ')[1] || 'dummy.jwt.token';
+    const paylpoad = jsonwebtoken.verify(token, process.env.JWT_SECRET);
+
+    // Check if user exisr or not
+    const user = await User.findById(paylpoad.id);
+    if (!user) {
+      return next();
+    }
+    req.user = paylpoad;
+    return next();
   } catch (error) {
-    console.log(error.message);
-    return false;
+    return next();
   }
 };
 

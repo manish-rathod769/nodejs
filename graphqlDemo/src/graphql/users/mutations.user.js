@@ -1,12 +1,9 @@
 /* eslint-disable no-console */
 const { hash, compare } = require('bcrypt');
-const {
-  GraphQLObjectType, GraphQLID, GraphQLString, GraphQLList,
-} = require('graphql');
+const { GraphQLString } = require('graphql');
 
-const { User, Post, Comment } = require('../models/index');
-const { UserType, PostType, CommentType } = require('./types');
-const generateToken = require('../utils/generateToken');
+const generateToken = require('../../utils/generateToken');
+const { User } = require('../../models/index');
 
 const addUser = {
   type: GraphQLString,
@@ -28,13 +25,13 @@ const addUser = {
       const user = new User({
         firstName, lastName, email, password: hashedPassword,
       });
-      await user.save();
+      const savedUser = await user.save();
 
       // Generate token and send response
-      const token = generateToken();
+      const token = generateToken(savedUser);
       return token;
     } catch (error) {
-      return error.message;
+      throw new Error(error.message);
     }
   },
 };
@@ -52,17 +49,20 @@ const loginUser = {
 
       // Check if user exist or not
       const matchedUser = await User.findOne({ email });
-      const matchPassword = await compare(password, matchedUser.password);
-
-      if (!matchedUser || !matchPassword) {
+      if (!matchedUser) {
         throw new Error('Invalid credentials');
       }
 
-      const token = generateToken(email);
+      // Check if user entered password is valid or not
+      const matchPassword = await compare(password, matchedUser.password);
+      if (!matchPassword) {
+        throw new Error('Invalid credentials');
+      }
+
+      const token = generateToken(matchedUser);
       return token;
     } catch (error) {
-      console.log(error.message);
-      return error.message;
+      throw new Error(error.message);
     }
   },
 };
