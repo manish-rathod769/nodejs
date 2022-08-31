@@ -1,16 +1,14 @@
 /* eslint-disable no-console */
 const jsonwebtoken = require('jsonwebtoken');
 
-const authentication = async (req, res, next) => {
+const authentication = async (req) => {
   try {
     const token = req.headers.authorization.split(' ')[1];
-    const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    console.log(decoded);
-    return next();
+    const isAuth = jsonwebtoken.verify(token, process.env.JWT_SECRET);
+    return isAuth;
   } catch (error) {
-    console.log('Authentication failed!!!', error.message);
-    return next();
+    console.log(error.message);
+    return false;
   }
 };
 
