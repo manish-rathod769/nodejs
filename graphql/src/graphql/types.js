@@ -13,6 +13,13 @@ const UserType = new GraphQLObjectType({
     firstName: { type: GraphQLString },
     lastName: { type: GraphQLString },
     email: { type: GraphQLString },
+    // password: { type: GraphQLString },
+    posts: {
+      type: GraphQLList(PostType),
+      resolve(parent, args) {
+        return Post.find({ userId: parent.id });
+      },
+    },
   }),
 });
 
