@@ -1,17 +1,14 @@
-/* eslint-disable no-console */
-/* eslint-disable no-unused-vars */
-const { GraphQLString, GraphQLID, GraphQLList } = require('graphql');
+const { GraphQLString, GraphQLID, GraphQLNonNull } = require('graphql');
 
 const { PostType } = require('../types');
 const { Post, Comment } = require('../../models/index');
-const authorization = require('../../middlewares/auth');
 
 const addPost = {
   type: PostType,
   description: 'Add a new post',
   args: {
-    title: { type: GraphQLString },
-    body: { type: GraphQLString },
+    title: { type: GraphQLNonNull(GraphQLString) },
+    body: { type: GraphQLNonNull(GraphQLString) },
   },
   async resolve(parent, args, { user }) {
     try {
@@ -35,9 +32,9 @@ const updatePost = {
   type: PostType,
   description: 'Update a post',
   args: {
-    id: { type: GraphQLID },
-    title: { type: GraphQLString },
-    body: { type: GraphQLString },
+    id: { type: GraphQLNonNull(GraphQLID) },
+    title: { type: GraphQLNonNull(GraphQLString) },
+    body: { type: GraphQLNonNull(GraphQLString) },
   },
   async resolve(parent, args, { user }) {
     try {
@@ -71,7 +68,7 @@ const deletePost = {
   type: GraphQLString,
   description: 'Delete a post',
   args: {
-    id: { type: GraphQLID },
+    id: { type: GraphQLNonNull(GraphQLID) },
   },
   async resolve(parent, args, { user }) {
     try {
@@ -86,7 +83,7 @@ const deletePost = {
         _id: id, userId: user.id,
       });
       if (!postDeleted) {
-        throw new Error('No post with the given ID found for the author !!!');
+        throw new Error('No post with the given ID found for the user !!!');
       }
 
       // If post is deleted then delete related comments to the post

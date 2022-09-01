@@ -1,4 +1,4 @@
-const { GraphQLString, GraphQLID } = require('graphql');
+const { GraphQLString, GraphQLID, GraphQLNonNull } = require('graphql');
 const { Comment, Post } = require('../../models/index');
 
 const { CommentType } = require('../types');
@@ -7,8 +7,8 @@ const addComment = {
   type: CommentType,
   description: 'Add a comment',
   args: {
-    postId: { type: GraphQLID },
-    comment: { type: GraphQLString },
+    postId: { type: GraphQLNonNull(GraphQLID) },
+    comment: { type: GraphQLNonNull(GraphQLString) },
   },
   async resolve(parent, args, { user }) {
     try {
@@ -41,8 +41,8 @@ const updateComment = {
   type: CommentType,
   description: 'Update a comment',
   args: {
-    id: { type: GraphQLID },
-    comment: { type: GraphQLString },
+    id: { type: GraphQLNonNull(GraphQLID) },
+    comment: { type: GraphQLNonNull(GraphQLString) },
   },
   async resolve(parent, args, { user }) {
     try {
@@ -76,7 +76,7 @@ const deleteComment = {
   type: GraphQLString,
   description: 'Delete a comment',
   args: {
-    id: { type: GraphQLID },
+    id: { type: GraphQLNonNull(GraphQLID) },
   },
   async resolve(parent, args, { user }) {
     try {

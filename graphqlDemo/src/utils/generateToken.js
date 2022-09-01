@@ -1,5 +1,4 @@
 /* eslint-disable no-underscore-dangle */
-/* eslint-disable no-console */
 const jwt = require('jsonwebtoken');
 
 const generateToken = (user) => {

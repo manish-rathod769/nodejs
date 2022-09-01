@@ -1,18 +1,17 @@
-/* eslint-disable no-console */
 const { hash, compare } = require('bcrypt');
-const { GraphQLString } = require('graphql');
+const { GraphQLString, GraphQLNonNull } = require('graphql');
 
 const generateToken = require('../../utils/generateToken');
 const { User } = require('../../models/index');
 
 const addUser = {
-  type: GraphQLString,
+  type: GraphQLNonNull(GraphQLString),
   description: 'Add a new user',
   args: {
-    firstName: { type: GraphQLString },
-    lastName: { type: GraphQLString },
-    email: { type: GraphQLString },
-    password: { type: GraphQLString },
+    firstName: { type: GraphQLNonNull(GraphQLString) },
+    lastName: { type: GraphQLNonNull(GraphQLString) },
+    email: { type: GraphQLNonNull(GraphQLString) },
+    password: { type: GraphQLNonNull(GraphQLString) },
   },
   async resolve(parent, args) {
     try {
@@ -37,11 +36,11 @@ const addUser = {
 };
 
 const loginUser = {
-  type: GraphQLString,
+  type: GraphQLNonNull(GraphQLString),
   description: 'Login user',
   args: {
-    email: { type: GraphQLString },
-    password: { type: GraphQLString },
+    email: { type: GraphQLNonNull(GraphQLString) },
+    password: { type: GraphQLNonNull(GraphQLString) },
   },
   async resolve(parent, args) {
     try {

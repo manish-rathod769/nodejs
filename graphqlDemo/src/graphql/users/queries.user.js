@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const { GraphQLList, GraphQLID } = require('graphql');
 
 const { UserType } = require('../types');
@@ -7,7 +6,7 @@ const { User } = require('../../models/index');
 const getAllUser = {
   type: new GraphQLList(UserType),
   description: 'Get all users',
-  resolve(parent, args) {
+  resolve() {
     try {
       return User.find();
     } catch (error) {
