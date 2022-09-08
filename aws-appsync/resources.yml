@@ -1,0 +1,143 @@
+# Book table resources
+BooksTable:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    TableName: ${self:custom.BooksTable}
+    AttributeDefinitions:
+      - AttributeName: 'bookId'
+        AttributeType: 'S'
+    BillingMode: PAY_PER_REQUEST
+    KeySchema:
+      - AttributeName: 'bookId'
+        KeyType: 'HASH'
+    Tags:
+      - Key: Name
+        Value: ${self:custom.BooksTable}
+
+# Order table resources
+OrderTable:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    TableName: ${self:custom.OrderTable}
+    AttributeDefinitions:
+      - AttributeName: 'userId'
+        AttributeType: 'S'
+      - AttributeName: 'orderId'
+        AttributeType: 'S'
+      - AttributeName: 'bookId'
+        AttributeType: 'S'
+      - AttributeName: 'createdAt'
+        AttributeType: 'S'
+    BillingMode: PAY_PER_REQUEST
+    KeySchema:
+      - AttributeName: 'userId'
+        KeyType: 'HASH'
+      - AttributeName: 'orderId'
+        KeyType: 'RANGE'
+    GlobalSecondaryIndexes:
+      - IndexName: 'byOrder'
+        KeySchema:
+          - AttributeName: 'bookId'
+            KeyType: 'HASH'
+          - AttributeName: 'createdAt'
+            KeyType: 'RANGE'
+        Projection: 
+          ProjectionType: 'ALL'
+    Tags:
+      - Key: Name
+        Value: ${self:custom.OrderTable}
+
+# Cognito user pool
+CognitoUserPool:
+  Type: AWS::Cognito::UserPool
+  Properties:
+    UserPoolName: ${self:custom.UserPool}
+    UsernameAttributes:
+      - email
+
+# User pool client
+CognitoUserPoolClient:
+  Type: AWS::Cognito::UserPoolClient
+  Properties:
+    ClientName: ${self:custom.UserPoolClient}
+    UserPoolId: !Ref CognitoUserPool
+
+# Admin Group
+CognitoAdminGroup:
+  Type: AWS::Cognito::UserPoolGroup
+  Properties:
+    GroupName: ${self:custom.UserAdminGroup}
+    Description: 'Admin group'
+    Precedence: 0
+    RoleArn : !GetAtt CognitoAdminIAMRole.Arn
+    UserPoolId: !Ref CognitoUserPool
+
+# Admin Role
+CognitoAdminIAMRole:
+  Type: AWS::IAM::Role
+  Properties:
+    RoleName: ${self:custom.AdminRoleName}
+    AssumeRolePolicyDocument:
+      Version: '2012-10-17'
+      Statement:
+        - Effect: Allow
+          Principal:
+            Federated:
+              - 'cognito-identity.amazonaws.com'
+          Action:
+            - 'sts:AssumeRoleWithWebIdentity'
+    Description: String
+    Policies:
+      - PolicyName: ${self:custom.AdminPolicyName}
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'dynamodb:*'
+              Resource:
+                - !GetAtt BooksTable.Arn
+                - !GetAtt OrderTable.Arn
+
+# Customer Group
+CognitoCustomerGroup:
+  Type: AWS::Cognito::UserPoolGroup
+  Properties:
+    GroupName: ${self:custom.UserCustomerGroup}
+    Description: 'Customer group'
+    Precedence: 1
+    RoleArn : !GetAtt CognitoCustomerIAMRole.Arn
+    UserPoolId: !Ref CognitoUserPool
+
+# Customer Role
+CognitoCustomerIAMRole:
+  Type: AWS::IAM::Role
+  Properties:
+    RoleName: ${self:custom.CustomerRoleName}
+    AssumeRolePolicyDocument:
+      Version: '2012-10-17'
+      Statement:
+        - Effect: Allow
+          Principal:
+            Federated:
+              - 'cognito-identity.amazonaws.com'
+          Action:
+            - "sts:AssumeRoleWithWebIdentity"
+    Description: String
+    Policies:
+      - PolicyName: ${self:custom.CustomerPolicyName}
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'dynamodb:*'
+              Resource:
+                - !GetAtt OrderTable.Arn
+            - Effect: Allow
+              Action:
+                - 'dynamodb:GetItem'
+                - 'dynamodb:Query'
+                - 'dynamodb:BatchGetItem'
+              Resource:
+                - !GetAtt BooksTable.Arn
