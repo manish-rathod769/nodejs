@@ -1,0 +1,24 @@
+org: manishrathod769
+app: aws-appsync
+service: aws-appsync
+
+frameworkVersion: '3'
+
+custom:
+  BooksTable: 'books-table'
+  OrderTable: 'order-table'
+  UserPool: 'book-store-user'
+  UserPoolClient: 'Web'
+  UserAdminGroup: 'ADMIN'
+  UserCustomerGroup: 'CUSTOMER'
+  AdminRoleName: 'book-store-admin-role'
+  CustomerRoleName: 'book-store-customer-role'
+  AdminPolicyName: 'book-store-admin-group-policy'
+  CustomerPolicyName: 'book-store-customer-group-policy'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+
+resources:
+  Resources: ${file(resources.yml)}
