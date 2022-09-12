@@ -4,6 +4,14 @@ service: aws-appsync
 
 frameworkVersion: '3'
 
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: 'us-east-1'
+
+plugins:
+  - serverless-appsync-plugin
+
 custom:
   BooksTable: 'books-table'
   OrderTable: 'order-table'
@@ -15,10 +23,75 @@ custom:
   CustomerRoleName: 'book-store-customer-role'
   AdminPolicyName: 'book-store-admin-group-policy'
   CustomerPolicyName: 'book-store-customer-group-policy'
+  AppSyncName: 'book-store-api'
+  appSync:
+    schema: schema.graphql
+    name: ${self:custom.AppSyncName}
+    authenticationType: AMAZON_COGNITO_USER_POOLS
+    userPoolConfig:
+      awsRegion: 'us-east-1'
+      defaultAction: 'ALLOW'
+      userPoolId: !Ref CognitoUserPool
+    mappingTemplatesLocation: src/mapping-templates
+    mappingTemplates:
+      - dataSource: createBook
+        type: Mutation
+        field: createBook
+      - dataSource: getBookById
+        type: Query
+        field: getBookById
+      - dataSource: deleteBook
+        type: Mutation
+        field: deleteBook
+      - dataSource: updateBook
+        type: Mutation
+        field: updateBook
+      - dataSource: listBooks
+        type: Query
+        field: listBooks
+    dataSources:
+      - type: AWS_LAMBDA
+        name: createBook
+        description: "Lambda function to create book"
+        config:
+          functionName: createBook
+      - type: AWS_LAMBDA
+        name: getBookById
+        description: "Lambda function to get book details"
+        config:
+          functionName: getBookById
+      - type: AWS_LAMBDA
+        name: deleteBook
+        description: "Lambda function to delete book details"
+        config:
+          functionName: deleteBook
+      - type: AWS_LAMBDA
+        name: updateBook
+        description: "Lambda function to update book details"
+        config:
+          functionName: updateBook
+      - type: AWS_LAMBDA
+        name: listBooks
+        description: "Lambda function to list books"
+        config:
+          functionName: listBooks
 
-provider:
-  name: aws
-  runtime: nodejs14.x
+functions:
+  createBook:
+    handler: src/controller/book/createBook.handler
+    role: CognitoAdminIAMRole
+  getBookById:
+    handler: src/controller/book/getBookById.handler
+    role: CognitoAdminIAMRole
+  deleteBook:
+    handler: src/controller/book/deleteBook.handler
+    role: CognitoAdminIAMRole
+  updateBook:
+    handler: src/controller/book/updateBook.handler
+    role: CognitoAdminIAMRole
+  listBooks:
+    handler: src/controller/book/listBooks.handler
+    role: CognitoAdminIAMRole
 
 resources:
   Resources: ${file(resources.yml)}

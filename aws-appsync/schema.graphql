@@ -5,7 +5,7 @@ schema {
 
 type Query {
   getBookById(bookId: ID!): Book!
-  listBooks(limit: Int!, nextToken: String): BooksPage!
+  listBooks(limit: Int!, lastEvaluatedKey: ID): BooksPage!
   myOrders(limit: Int!, nextToken: String): OrderItemsPage!
 }
 
@@ -23,14 +23,14 @@ type OrderItem {
 
 type BooksPage {
   books: [Book]
-  nextToken: String
+  lastEvaluatedKey: ID
 }
 
 type Book {
   bookId: ID!
   title: String!
-  description: String
-  imageUrl: AWSURL
+  description: String!
+  imageUrl: AWSURL!
   author: String!
   price: Float!
   createdAt: AWSDateTime!
@@ -38,7 +38,9 @@ type Book {
 }
 
 type Mutation {
-  createBook(newBook: BookInput): Book! @aws_auth[cognito_groups: ['Admin']]
+  createBook(newBook: BookInput): Book! @aws_auth(cognito_groups: ["ADMIN"])
+  updateBook(updateBook: UpdateBookInput): Book! @aws_auth(cognito_groups: ["ADMIN"])
+  deleteBook(bookId: ID!): Book! @aws_auth(cognito_groups: ["ADMIN"])
   createOrder(newOrder: OrderInput): Boolean!
 }
 
@@ -53,8 +55,17 @@ input OrderItemInput {
 
 input BookInput {
   title: String!
-  description: String
-  imageURL: AWSURL
+  description: String!
+  imageUrl: AWSURL!
+  author: String!
+  price: Float!
+}
+
+input UpdateBookInput {
+  bookId: ID!
+  title: String!
+  description: String!
+  imageUrl: AWSURL!
   author: String!
   price: Float!
 }

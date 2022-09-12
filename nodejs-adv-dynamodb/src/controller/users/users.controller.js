@@ -24,20 +24,20 @@ const checkIfUserExist = async (userId) => {
   }
 };
 
-exports.getAllUser = async () => {
+exports.getAllUser = async (event) => {
+  const lastEvalKey = event.queryStringParameters?.lastEvalKey;
   const params = {
     TableName: USER,
-    IndexName: 'firstName-index',
-    KeyConditionExpression: 'firstName = :firstName',
-    ExpressionAttributeValues: {
-      ':firstName': 'Manish',
-    },
+    Limit: 5,
   };
-  const users = await dynamoDbClient.query(params).promise();
-  if (!users) {
+  if (lastEvalKey) {
+    params.ExclusiveStartKey = { userId: lastEvalKey };
+  }
+  const res = await dynamoDbClient.scan(params).promise();
+  if (!res) {
     return errorResponse({ message: 'Error while fetching users data!!!' }, 500);
   }
-  return successResponse(users, 200);
+  return successResponse(res, 200);
 };
 
 exports.getOneUser = async (event) => {
@@ -87,8 +87,8 @@ exports.addUser = async (event, context) => {
   if (!user) {
     return errorResponse({ message: 'Error while adding user data!!!' }, 500);
   }
-  delete params.Item.password;
-  return successResponse({ user: params.Item, message: 'Data added successfully...' }, 200);
+  // delete params.Item.password;
+  return successResponse({ user, message: 'Data added successfully...' }, 200);
 };
 
 exports.updateUser = async (event) => {
