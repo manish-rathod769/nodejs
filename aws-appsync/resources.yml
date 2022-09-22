@@ -30,14 +30,14 @@ OrderTable:
         AttributeType: 'S'
     BillingMode: PAY_PER_REQUEST
     KeySchema:
-      - AttributeName: 'userId'
-        KeyType: 'HASH'
       - AttributeName: 'orderId'
+        KeyType: 'HASH'
+      - AttributeName: 'bookId'
         KeyType: 'RANGE'
     GlobalSecondaryIndexes:
-      - IndexName: 'byOrder'
+      - IndexName: 'byUser'
         KeySchema:
-          - AttributeName: 'bookId'
+          - AttributeName: 'userId'
             KeyType: 'HASH'
           - AttributeName: 'createdAt'
             KeyType: 'RANGE'

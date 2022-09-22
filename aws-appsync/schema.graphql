@@ -41,7 +41,7 @@ type Mutation {
   createBook(newBook: BookInput): Book! @aws_auth(cognito_groups: ["ADMIN"])
   updateBook(updateBook: UpdateBookInput): Book! @aws_auth(cognito_groups: ["ADMIN"])
   deleteBook(bookId: ID!): String! @aws_auth(cognito_groups: ["ADMIN"])
-  createOrder(newOrder: OrderInput): AWSJSON! @aws_auth(cognito_groups: ["CUSTOMER"])
+  createOrder(newOrder: OrderInput): String! @aws_auth(cognito_groups: ["CUSTOMER"])
 }
 
 input OrderInput {
@@ -65,7 +65,7 @@ input UpdateBookInput {
   bookId: ID!
   title: String!
   description: String!
-  imageUrl: AWSURL!
+  imageUrl: AWSURL
   author: String!
   price: Float!
 }
