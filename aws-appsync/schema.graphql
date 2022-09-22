@@ -40,12 +40,12 @@ type Book {
 type Mutation {
   createBook(newBook: BookInput): Book! @aws_auth(cognito_groups: ["ADMIN"])
   updateBook(updateBook: UpdateBookInput): Book! @aws_auth(cognito_groups: ["ADMIN"])
-  deleteBook(bookId: ID!): Book! @aws_auth(cognito_groups: ["ADMIN"])
-  createOrder(newOrder: OrderInput): Boolean!
+  deleteBook(bookId: ID!): String! @aws_auth(cognito_groups: ["ADMIN"])
+  createOrder(newOrder: OrderInput): AWSJSON! @aws_auth(cognito_groups: ["CUSTOMER"])
 }
 
 input OrderInput {
-  items: [OrderItemInput]
+  items: [OrderItemInput]!
 }
 
 input OrderItemInput {

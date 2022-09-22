@@ -1,7 +1,5 @@
 const AWS = require('aws-sdk');
 
-const { successResponse } = require('../../helper/responses');
-
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
 const bookTable = 'books-table';
 
@@ -21,7 +19,10 @@ const handler = async (event) => {
     }
 
     await dynamoDbClient.delete(params).promise();
-    return successResponse(`Book with bookId: '${bookId}' deleted successfully...`, 200);
+    return {
+      statusCode: 200,
+      body: `Book with bookId: '${bookId}' deleted successfully...`,
+    }
   } catch (error) {
     throw new Error(error);
   }

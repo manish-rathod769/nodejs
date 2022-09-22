@@ -9,11 +9,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "serverless-appsync-plugin": "^1.14.0"
-  },
   "dependencies": {
-    "aws-sdk": "^2.1211.0",
-    "uuid": "^9.0.0"
+    "serverless-appsync-plugin": "^1.14.0"
   }
 }

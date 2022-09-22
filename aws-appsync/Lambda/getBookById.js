@@ -1,7 +1,5 @@
 const AWS = require('aws-sdk');
 
-const { successResponse } = require('../../helper/responses');
-
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
 const bookTable = 'books-table';
 
@@ -19,7 +17,10 @@ const handler = async (event) => {
     if (!Item) {
       throw new Error(`Book does not exist with bookId: '${bookId}' !!!`);
     }
-    return successResponse(Item, 200);
+    return {
+      statusCode: 200,
+      body: Item,
+    }
   } catch (error) {
     throw new Error(error);
   }

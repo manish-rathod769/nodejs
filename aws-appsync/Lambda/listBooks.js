@@ -1,7 +1,5 @@
 const AWS = require('aws-sdk');
 
-const { successResponse } = require('../../helper/responses');
-
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
 const bookTable = 'books-table';
 
@@ -18,7 +16,10 @@ const handler = async (event) => {
 
   try {
     const { Items, LastEvaluatedKey } = await dynamoDbClient.scan(params).promise();
-    return successResponse({ books: Items, lastEvaluatedKey: LastEvaluatedKey?.bookId }, 200);
+    return {
+      statusCode: 200,
+      body: { books: Items, lastEvaluatedKey: LastEvaluatedKey?.bookId },
+    }
   } catch (error) {
     throw new Error(error);
   }

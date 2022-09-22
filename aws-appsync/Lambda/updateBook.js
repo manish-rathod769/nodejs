@@ -1,7 +1,5 @@
 const AWS = require('aws-sdk');
 
-const { successResponse } = require('../../helper/responses');
-
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
 const bookTable = 'books-table';
 
@@ -54,7 +52,10 @@ const handler = async (event) => {
 
   try {
     await dynamoDbClient.update(params).promise();
-    return successResponse(event.updateBook, 200);
+    return {
+      statusCode: 200,
+      body: event.updateBook,
+    }
   } catch (error) {
     throw new Error(error);
   }

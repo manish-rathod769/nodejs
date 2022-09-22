@@ -1,8 +1,6 @@
 const AWS = require('aws-sdk');
 const { v4: uuidv4 } = require('uuid');
 
-const { successResponse } = require('../../helper/responses');
-
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
 const bookTable = 'books-table';
 
@@ -25,7 +23,10 @@ const handler = async (event) => {
 
   try {
     const savedBook = await dynamoDbClient.put(params).promise();
-    return successResponse(params.Item, 200);
+    return {
+      statusCode: 200,
+      body: params.Item,
+    }
   } catch (error) {
     throw new Error(error);
   }

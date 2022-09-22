@@ -104,6 +104,17 @@ CognitoAdminIAMRole:
               Resource:
                 - !GetAtt BooksTable.Arn
                 - !GetAtt OrderTable.Arn
+            - Effect: Allow
+              Action:
+                - 'logs:CreateLogGroup'
+                - 'logs:CreateLogStream'
+                - 'logs:DescribeLogGroups'
+                - 'logs:DescribeLogStreams'
+                - 'logs:PutLogEvents'
+                - 'cloudwatch:ListMetrics'
+                - 'cloudwatch:PutMetricData'
+              Resource:
+                - '*'
 
 # Customer Group
 CognitoCustomerGroup:
@@ -129,6 +140,12 @@ CognitoCustomerIAMRole:
               - 'cognito-identity.amazonaws.com'
           Action:
             - "sts:AssumeRoleWithWebIdentity"
+        - Effect: Allow
+          Principal:
+            Service:
+              - "lambda.amazonaws.com"
+          Action:
+            - 'sts:AssumeRole'
     Description: String
     Policies:
       - PolicyName: ${self:custom.CustomerPolicyName}
@@ -145,5 +162,17 @@ CognitoCustomerIAMRole:
                 - 'dynamodb:GetItem'
                 - 'dynamodb:Query'
                 - 'dynamodb:BatchGetItem'
+                - 'dynamodb:Scan'
               Resource:
                 - !GetAtt BooksTable.Arn
+            - Effect: Allow
+              Action:
+                - 'logs:CreateLogGroup'
+                - 'logs:CreateLogStream'
+                - 'logs:DescribeLogGroups'
+                - 'logs:DescribeLogStreams'
+                - 'logs:PutLogEvents'
+                - 'cloudwatch:ListMetrics'
+                - 'cloudwatch:PutMetricData'
+              Resource:
+                - '*'
