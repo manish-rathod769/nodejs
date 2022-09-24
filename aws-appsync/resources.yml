@@ -20,27 +20,19 @@ OrderTable:
   Properties:
     TableName: ${self:custom.OrderTable}
     AttributeDefinitions:
-      - AttributeName: 'userId'
-        AttributeType: 'S'
       - AttributeName: 'orderId'
         AttributeType: 'S'
-      - AttributeName: 'bookId'
-        AttributeType: 'S'
-      - AttributeName: 'createdAt'
+      - AttributeName: 'userId'
         AttributeType: 'S'
     BillingMode: PAY_PER_REQUEST
     KeySchema:
       - AttributeName: 'orderId'
         KeyType: 'HASH'
-      - AttributeName: 'bookId'
-        KeyType: 'RANGE'
     GlobalSecondaryIndexes:
       - IndexName: 'byUser'
         KeySchema:
           - AttributeName: 'userId'
             KeyType: 'HASH'
-          - AttributeName: 'createdAt'
-            KeyType: 'RANGE'
         Projection: 
           ProjectionType: 'ALL'
     Tags:
@@ -156,7 +148,12 @@ CognitoCustomerIAMRole:
               Action:
                 - 'dynamodb:*'
               Resource:
-                - !GetAtt OrderTable.Arn
+                - { "Fn::GetAtt": ["OrderTable", "Arn" ] }
+                - Fn::Join:
+                  - "/"
+                  -
+                    - { "Fn::GetAtt": ["OrderTable", "Arn" ] }
+                    - "index/*"
             - Effect: Allow
               Action:
                 - 'dynamodb:GetItem'

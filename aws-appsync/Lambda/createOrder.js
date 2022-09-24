@@ -3,9 +3,9 @@ const { v4: uuidv4 } = require('uuid');
 
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
 const bookTable = 'books-table';
-const orderTable = 'orders-table';
+const orderTable = 'orders-table5';
 
-const handler = async (event, context) => {
+const handler = async (event) => {
   try {
     const userId = event.identity.username;
     const orderData = event.arguments?.newOrder.items;
@@ -18,7 +18,6 @@ const handler = async (event, context) => {
       );
     });
 
-
     // Check if all book ids exist or not
     const params = { RequestItems: {} };
     params.RequestItems[`${bookTable}`] = {
@@ -29,31 +28,18 @@ const handler = async (event, context) => {
     if (result.Responses[`${bookTable}`].length !== orderData.length) {
       throw new Error('Some book does not exist in store !!!');
     }
-
-    // Generate new order
-    const orderId = uuidv4();
-    const orderParams = { RequestItems: {} };
-    orderParams.RequestItems[`${orderTable}`] = [];
-    orderData.forEach((order) => {
-      orderParams.RequestItems[`${orderTable}`].push({
-        PutRequest: {
-          Item: {
-            orderId,
-            userId,
-            bookId: order.bookId,
-            quantity: order.quantity,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-        },
-      });
-    });
-
-    // Create order
-    const orderResult = await dynamoDbClient.batchWrite(orderParams).promise();
-    if (orderResult.UnprocessedItems[`${orderTable}`]) {
-      throw new Error('Some error occured while creating order !!!');
+    
+    const orderParams = {
+      TableName: `${orderTable}`,
+      Item: {
+        orderId: uuidv4(),
+        userId,
+        orderDetails: orderData,
+        createdAt: new Date().toISOString()
+      }
     }
+
+    const orderDetails = await dynamoDbClient.put(orderParams).promise();
 
     return {
       statusCode: 200,

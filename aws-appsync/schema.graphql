@@ -6,18 +6,25 @@ schema {
 type Query {
   getBookById(bookId: ID!): Book!
   listBooks(limit: Int!, lastEvaluatedKey: ID): BooksPage!
-  myOrders(limit: Int!, nextToken: String): OrderItemsPage!
+  myOrders(limit: Int!, lastEvaluatedKey: ID): OrderItemsPage! @aws_auth(cognito_groups: ["CUSTOMER"])
+  allOrders(limit: Int!, lastEvaluatedKey: ID): OrderItemsPage! @aws_auth(cognito_groups: ["ADMIN"])
+  getOrderById(orderId: ID!): OrderItem!
 }
 
 type OrderItemsPage {
-  orderItem: [OrderItem]
-  nextToken: String
+  orders: [OrderItem]
+  lastEvaluatedKey: ID
 }
 
 type OrderItem {
   orderId: ID!
   userId: ID!
-  book: ID!
+  orderDetails: [OrderObject]!
+  createdAt: AWSDateTime!
+}
+
+type OrderObject {
+  bookId: ID!
   quantity: Int!
 }
 
@@ -30,7 +37,7 @@ type Book {
   bookId: ID!
   title: String!
   description: String!
-  imageUrl: AWSURL!
+  imageUrl: AWSURL
   author: String!
   price: Float!
   createdAt: AWSDateTime!
@@ -56,7 +63,7 @@ input OrderItemInput {
 input BookInput {
   title: String!
   description: String!
-  imageUrl: AWSURL!
+  imageUrl: AWSURL
   author: String!
   price: Float!
 }

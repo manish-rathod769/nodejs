@@ -30,7 +30,7 @@ package:
 
 custom:
   BooksTable: "books-table"
-  OrderTable: "orders-table"
+  OrderTable: "orders-table5"
   UserPool: "book-store-user"
   UserPoolClient: "Web"
   UserAdminGroup: "ADMIN"
@@ -80,6 +80,21 @@ custom:
         field: createOrder
         request: false
         response: default.response.vtl
+      - dataSource: getOrderById
+        type: Query
+        field: getOrderById
+        request: default.request.vtl
+        response: default.response.vtl
+      - dataSource: myOrders
+        type: Query
+        field: myOrders
+        request: false
+        response: default.response.vtl
+      - dataSource: allOrders
+        type: Query
+        field: allOrders
+        request: default.request.vtl
+        response: default.response.vtl
     dataSources:
       - type: AWS_LAMBDA
         name: createBook
@@ -111,6 +126,21 @@ custom:
         description: "Lambda function to order books"
         config:
           functionName: createOrder
+      - type: AWS_LAMBDA
+        name: getOrderById
+        description: "Lambda function to get order by id"
+        config:
+          functionName: getOrderById
+      - type: AWS_LAMBDA
+        name: myOrders
+        description: "Lambda function to get users past orders"
+        config:
+          functionName: myOrders
+      - type: AWS_LAMBDA
+        name: allOrders
+        description: "Lambda function to get all orders for admin"
+        config:
+          functionName: allOrders
 
 functions:
   createBook:
@@ -161,6 +191,30 @@ functions:
     layers:
       - { Ref: AwsSdkUuidLambdaLayer }
     role: CognitoCustomerIAMRole
+  getOrderById:
+    handler: Lambda/getOrderById.handler
+    package:
+      include:
+        - ./Lambda/getOrderById.js
+    layers:
+      - { Ref: AwsSdkUuidLambdaLayer }
+    role: CognitoCustomerIAMRole
+  myOrders:
+    handler: Lambda/myOrders.handler
+    package:
+      include:
+        - ./Lambda/myOrders.js
+    layers:
+      - { Ref: AwsSdkUuidLambdaLayer }
+    role: CognitoCustomerIAMRole
+  allOrders:
+    handler: Lambda/allOrders.handler
+    package:
+      include:
+        - ./Lambda/allOrders.js
+    layers:
+      - { Ref: AwsSdkUuidLambdaLayer }
+    role: CognitoAdminIAMRole
 
 resources:
   Resources: ${file(resources.yml)}

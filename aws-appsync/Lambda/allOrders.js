@@ -4,22 +4,21 @@ const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
 const orderTable = 'orders-table5';
 
 const handler = async (event) => {
-  const { orderId } = event;
+  const { lastEvaluatedKey, limit } = event;
   const params = {
     TableName: orderTable,
-    Key: {
-      orderId,
-    },
+    Limit: limit || 5,
   };
 
+  if (lastEvaluatedKey) {
+    params.ExclusiveStartKey = { orderId: lastEvaluatedKey };
+  }
+
   try {
-    const { Item } = await dynamoDbClient.get(params).promise();
-    if (!Item) {
-      throw new Error(`Order does not exist with orderId: '${orderId}' !!!`);
-    }
+    const { Items, LastEvaluatedKey } = await dynamoDbClient.scan(params).promise();
     return {
       statusCode: 200,
-      body: Item,
+      body: { orders: Items, lastEvaluatedKey: LastEvaluatedKey?.orderId },
     }
   } catch (error) {
     throw new Error(error);
