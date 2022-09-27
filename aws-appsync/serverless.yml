@@ -50,16 +50,22 @@ custom:
       userPoolId: !Ref CognitoUserPool
     mappingTemplatesLocation: mapping-templates
     mappingTemplates:
-      - dataSource: createBook
+      # - dataSource: createBook
+      #   type: Mutation
+      #   field: createBook
+      #   request: default.request.vtl
+      #   response: default.response.vtl
+      - dataSource: bookTableDataSource
         type: Mutation
         field: createBook
-        request: default.request.vtl
-        response: default.response.vtl
-      - dataSource: getBookById
+      # - dataSource: getBookById
+      #   type: Query
+      #   field: getBookById
+      #   request: default.request.vtl
+      #   response: default.response.vtl
+      - dataSource: bookTableDataSource
         type: Query
         field: getBookById
-        request: default.request.vtl
-        response: default.response.vtl
       - dataSource: deleteBook
         type: Mutation
         field: deleteBook
@@ -96,6 +102,11 @@ custom:
         request: default.request.vtl
         response: default.response.vtl
     dataSources:
+      - type: AMAZON_DYNAMODB
+        name: bookTableDataSource
+        description: "books-table dybanodb data sources"
+        config:
+          tableName: !Ref BooksTable
       - type: AWS_LAMBDA
         name: createBook
         description: "Lambda function to create book"
