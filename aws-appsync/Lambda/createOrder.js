@@ -2,11 +2,12 @@ const AWS = require('aws-sdk');
 const { v4: uuidv4 } = require('uuid');
 
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
-const bookTable = 'books-table';
-const orderTable = 'orders-table5';
+const bookTable = process.env.BOOK_TABLE;
+const orderTable = process.env.ORDER_TABLE;
 
 const handler = async (event) => {
   try {
+    console.log(event);
     const userId = event.identity.username;
     const orderData = event.arguments?.newOrder.items;
 

@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
-const orderTable = 'orders-table5';
+const orderTable = process.env.ORDER_TABLE;
 
 const handler = async (event) => {
   const { orderId } = event;

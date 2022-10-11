@@ -9,6 +9,7 @@ type Query {
   myOrders(limit: Int!, lastEvaluatedKey: ID): OrderItemsPage! @aws_auth(cognito_groups: ["CUSTOMER"])
   allOrders(limit: Int!, lastEvaluatedKey: ID): OrderItemsPage! @aws_auth(cognito_groups: ["ADMIN"])
   getOrderById(orderId: ID!): OrderItem!
+  getLoggedInUser(customerId: ID!): AWSJSON!
 }
 
 type OrderItemsPage {

@@ -101,6 +101,12 @@ custom:
         field: allOrders
         request: default.request.vtl
         response: default.response.vtl
+      - dataSource: getLoggedInUser
+        type: Query
+        field: getLoggedInUser
+        request: false
+        response: false
+      
     dataSources:
       - type: AMAZON_DYNAMODB
         name: bookTableDataSource
@@ -152,80 +158,125 @@ custom:
         description: "Lambda function to get all orders for admin"
         config:
           functionName: allOrders
+      - type: AWS_LAMBDA
+        name: getLoggedInUser
+        description: "Lambda function to get details of logged in customer"
+        config:
+          functionName: getLoggedInUser
 
 functions:
+
   createBook:
     handler: Lambda/createBook.handler
     package:
       include:
         - ./Lambda/createBook.js
+    environment:
+      BOOK_TABLE: ${self:custom.BooksTable}
     layers: # Attach Layers
       - { Ref: AwsSdkUuidLambdaLayer }
     role: CognitoAdminIAMRole
+
   getBookById:
     handler: Lambda/getBookById.handler
     package:
       include:
         - ./Lambda/getBookById.js
+    environment:
+      BOOK_TABLE: ${self:custom.BooksTable}
     layers:
       - { Ref: AwsSdkUuidLambdaLayer }
     role: CognitoAdminIAMRole
+
   deleteBook:
     handler: Lambda/deleteBook.handler
     package:
       include:
         - ./Lambda/deleteBook.js
+    environment:
+      BOOK_TABLE: ${self:custom.BooksTable}
     layers:
       - { Ref: AwsSdkUuidLambdaLayer }
     role: CognitoAdminIAMRole
+
   updateBook:
     handler: Lambda/updateBook.handler
     package:
       include:
         - ./Lambda/updateBook.js
+    environment:
+      BOOK_TABLE: ${self:custom.BooksTable}
     layers:
       - { Ref: AwsSdkUuidLambdaLayer }
     role: CognitoAdminIAMRole
+
   listBooks:
     handler: Lambda/listBooks.handler
     package:
       include:
         - ./Lambda/listBooks.js
+    environment:
+      BOOK_TABLE: ${self:custom.BooksTable}
     layers:
       - { Ref: AwsSdkUuidLambdaLayer }
     role: CognitoCustomerIAMRole
+
   createOrder:
     handler: Lambda/createOrder.handler
     package:
       include:
         - ./Lambda/createOrder.js
+    environment:
+      BOOK_TABLE: ${self:custom.BooksTable}
+      ORDER_TABLE: ${self:custom.OrderTable}
     layers:
       - { Ref: AwsSdkUuidLambdaLayer }
     role: CognitoCustomerIAMRole
+
   getOrderById:
     handler: Lambda/getOrderById.handler
     package:
       include:
         - ./Lambda/getOrderById.js
+    environment:
+      ORDER_TABLE: ${self:custom.OrderTable}
     layers:
       - { Ref: AwsSdkUuidLambdaLayer }
     role: CognitoCustomerIAMRole
+
   myOrders:
     handler: Lambda/myOrders.handler
     package:
       include:
         - ./Lambda/myOrders.js
+    environment:
+      ORDER_TABLE: ${self:custom.OrderTable}
     layers:
       - { Ref: AwsSdkUuidLambdaLayer }
     role: CognitoCustomerIAMRole
+
   allOrders:
     handler: Lambda/allOrders.handler
     package:
       include:
         - ./Lambda/allOrders.js
+    environment:
+      ORDER_TABLE: ${self:custom.OrderTable}
     layers:
       - { Ref: AwsSdkUuidLambdaLayer }
     role: CognitoAdminIAMRole
+
+  getLoggedInUser:
+    handler: Lambda/getLoggedInUser.handler
+    package:
+      include:
+        - ./Lambda/getLoggedInUser.js
+    environment:
+      USER_POOL_ID: { Ref: CognitoUserPool }
+    layers:
+      - { Ref: AwsSdkUuidLambdaLayer }
+    role: CognitoCustomerIAMRole
+
 
 resources:
   Resources: ${file(resources.yml)}

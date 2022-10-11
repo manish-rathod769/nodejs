@@ -2,7 +2,7 @@ const AWS = require('aws-sdk');
 const { v4: uuidv4 } = require('uuid');
 
 const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
-const bookTable = 'books-table';
+const bookTable = process.env.BOOK_TABLE;
 
 const handler = async (event) => {
   const { title, description, imageUrl, author, price } = event.newBook;
