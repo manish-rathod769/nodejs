@@ -277,6 +277,5 @@ functions:
       - { Ref: AwsSdkUuidLambdaLayer }
     role: CognitoCustomerIAMRole
 
-
 resources:
   Resources: ${file(resources.yml)}
